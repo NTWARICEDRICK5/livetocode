@@ -263,6 +263,8 @@ const CoursePage = () => {
           </div>
         </main>
       </div>
+
+      <Footer />
     </div>
   );
 };
