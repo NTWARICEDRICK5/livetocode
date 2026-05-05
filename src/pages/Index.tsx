@@ -217,23 +217,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-8 text-center text-muted-foreground text-sm">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 font-bold">
-            <Code2 className="w-5 h-5 text-primary" />
-            <span className="text-gradient-primary">Code</span>
-            <span>Learn</span>
-          </div>
-          <p>Learn to code. Build the future. 🚀</p>
-          <div className="flex gap-6">
-            {courses.map((c) => (
-              <Link key={c.id} to={`/course/${c.id}`} className="hover:text-primary transition-colors">
-                {c.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
