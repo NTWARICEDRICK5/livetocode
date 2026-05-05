@@ -88,6 +88,14 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          <a
+            href="mailto:ntwaricedrick3@gmail.com"
+            className="flex items-center gap-2 px-6 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Mail className="w-4 h-4" />
+            Contact Developer
+          </a>
           <div className="px-6 py-4">
             <Link
               to="/#courses"
