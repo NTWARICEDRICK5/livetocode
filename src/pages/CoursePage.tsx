@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import CodeBlock from "@/components/CodeBlock";
 import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
 
