@@ -1,10 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Code2, Menu, X, Mail } from "lucide-react";
 import { useState } from "react";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
 
   const links = [
     { label: "Courses", href: "/#courses" },
