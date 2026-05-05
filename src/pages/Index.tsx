@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { courses } from "@/data/courses";
 import CourseCard from "@/components/CourseCard";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ArrowDown, Code2, BookOpen, Users, Zap, Star } from "lucide-react";
 
 const stats = [
