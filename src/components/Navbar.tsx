@@ -1,10 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
-import { Code2, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Code2, Menu, X, Mail } from "lucide-react";
 import { useState } from "react";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
 
   const links = [
     { label: "Courses", href: "/#courses" },
@@ -24,14 +23,19 @@ const Navbar = () => {
           <div className="w-9 h-9 rounded-lg bg-gradient-primary flex items-center justify-center glow-cyan group-hover:scale-105 transition-transform">
             <Code2 className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-bold text-lg tracking-tight">
-            <span className="text-gradient-primary">Code</span>
-            <span className="text-foreground">Learn</span>
-          </span>
+          <div className="flex flex-col leading-none">
+            <span className="font-bold text-lg tracking-tight">
+              <span className="text-gradient-primary">Code</span>
+              <span className="text-foreground">Learn</span>
+            </span>
+            <span className="text-[10px] text-muted-foreground/70 font-medium hidden sm:block">
+              by NTWARI Cedrick
+            </span>
+          </div>
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {links.map((link) => (
             <Link
               key={link.label}
@@ -43,8 +47,16 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="hidden md:block">
+        {/* CTA + Contact */}
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            href="mailto:ntwaricedrick3@gmail.com"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-secondary/50"
+            title="Contact Developer"
+          >
+            <Mail className="w-4 h-4" />
+            <span className="hidden lg:inline">Contact</span>
+          </a>
           <Link
             to="/#courses"
             className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary text-primary-foreground hover:opacity-90 transition-opacity glow-cyan"
@@ -75,6 +87,14 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          <a
+            href="mailto:ntwaricedrick3@gmail.com"
+            className="flex items-center gap-2 px-6 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Mail className="w-4 h-4" />
+            Contact Developer
+          </a>
           <div className="px-6 py-4">
             <Link
               to="/#courses"
