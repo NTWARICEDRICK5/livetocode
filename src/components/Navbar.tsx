@@ -7,12 +7,12 @@ const Navbar = () => {
 
   const links = [
     { label: "Courses", href: "/#courses" },
+    { label: "Playground", href: "/playground" },
+    { label: "Explore More", href: "/#explore" },
     { label: "Python", href: "/course/python" },
     { label: "C", href: "/course/c" },
     { label: "C++", href: "/course/cpp" },
-    { label: "HTML", href: "/course/html" },
-    { label: "CSS", href: "/course/css" },
-    { label: "JavaScript", href: "/course/javascript" },
+    { label: "JS", href: "/course/javascript" },
   ];
 
   return (
