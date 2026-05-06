@@ -4,7 +4,9 @@ import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CodeBlock from "@/components/CodeBlock";
-import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
+import RelatedCourseCard from "@/components/RelatedCourseCard";
+import { relatedCourses } from "@/data/relatedCourses";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Play } from "lucide-react";
 
 const CoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -201,6 +203,49 @@ const CoursePage = () => {
               <CodeBlock code={lesson.code} output={lesson.output} language={course.name} />
             </div>
 
+            {/* Try it yourself - live editor */}
+            {(() => {
+              const slugMap: Record<string, string> = {
+                python: "python",
+                c: "c",
+                cpp: "cpp",
+                javascript: "javascript",
+                html: "html-css-js",
+                css: "html-css-js",
+              };
+              const slug = slugMap[course.id];
+              if (!slug) return null;
+              return (
+                <div className="mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-primary/20 text-primary flex items-center justify-center text-sm">
+                        <Play className="w-3.5 h-3.5" />
+                      </span>
+                      Try It Yourself
+                    </h3>
+                    <Link
+                      to="/playground"
+                      className="text-xs text-primary hover:underline font-semibold"
+                    >
+                      Open full playground →
+                    </Link>
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-border/50 shadow-xl">
+                    <iframe
+                      src={`https://onecompiler.com/embed/${slug}?hideLanguageSelection=true&hideTitle=true&theme=dark`}
+                      title={`${course.name} live editor`}
+                      className="w-full h-[520px] bg-[hsl(220_25%_5%)] border-0"
+                      allow="clipboard-write"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    💡 Edit the code and hit <span className="text-primary font-semibold">Run</span> to see your output instantly.
+                  </p>
+                </div>
+              );
+            })()}
+
             {/* Navigation */}
             <div className="flex items-center justify-between pt-6 border-t border-border/50">
               <button
@@ -260,6 +305,29 @@ const CoursePage = () => {
                 </div>
               </div>
             </div>
+
+            {/* Related courses */}
+            {(() => {
+              const matches = relatedCourses.filter((r) =>
+                r.related.some((x) => x.toLowerCase() === course.name.toLowerCase() || x === "All")
+              );
+              if (matches.length === 0) return null;
+              return (
+                <div className="mt-12">
+                  <h3 className="text-2xl font-extrabold text-foreground mb-2">
+                    What to Learn <span className="text-gradient-primary">Next</span>
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Technologies and tools that build on top of {course.name}.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {matches.map((c) => (
+                      <RelatedCourseCard key={c.name} course={c} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </main>
       </div>
