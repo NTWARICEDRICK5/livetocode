@@ -305,6 +305,29 @@ const CoursePage = () => {
                 </div>
               </div>
             </div>
+
+            {/* Related courses */}
+            {(() => {
+              const matches = relatedCourses.filter((r) =>
+                r.related.some((x) => x.toLowerCase() === course.name.toLowerCase() || x === "All")
+              );
+              if (matches.length === 0) return null;
+              return (
+                <div className="mt-12">
+                  <h3 className="text-2xl font-extrabold text-foreground mb-2">
+                    What to Learn <span className="text-gradient-primary">Next</span>
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Technologies and tools that build on top of {course.name}.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {matches.map((c) => (
+                      <RelatedCourseCard key={c.name} course={c} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </main>
       </div>
