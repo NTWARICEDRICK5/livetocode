@@ -4,7 +4,9 @@ import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CodeBlock from "@/components/CodeBlock";
-import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
+import RelatedCourseCard from "@/components/RelatedCourseCard";
+import { relatedCourses } from "@/data/relatedCourses";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Play } from "lucide-react";
 
 const CoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
