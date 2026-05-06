@@ -1,10 +1,12 @@
 import heroBg from "@/assets/hero-bg.jpg";
 import { Link } from "react-router-dom";
 import { courses } from "@/data/courses";
+import { relatedCourses } from "@/data/relatedCourses";
 import CourseCard from "@/components/CourseCard";
+import RelatedCourseCard from "@/components/RelatedCourseCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowDown, Code2, BookOpen, Zap, Star } from "lucide-react";
+import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass } from "lucide-react";
 
 const stats = [
   { label: "Programming Languages", value: "6", icon: Code2 },
@@ -157,6 +159,33 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Playground CTA */}
+      <section className="py-20 border-t border-border/50">
+        <div className="container mx-auto px-4">
+          <div className="card-glass rounded-3xl p-10 md:p-14 grid md:grid-cols-[1fr_auto] gap-8 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-4">
+                <Play className="w-3.5 h-3.5" />
+                LIVE PLAYGROUND
+              </div>
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-3">
+                Write & Run Your Own <span className="text-gradient-primary">Code</span>
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-xl">
+                Practice what you learn in our in-browser editor. Supports Python, C, C++, JavaScript, and HTML/CSS/JS — no setup required.
+              </p>
+            </div>
+            <Link
+              to="/playground"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-primary text-primary-foreground rounded-xl font-bold text-lg hover:opacity-90 transition-all glow-cyan hover:scale-105"
+            >
+              <Play className="w-5 h-5" />
+              Open Playground
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Learning Path Section */}
       <section className="py-20 bg-card/20 border-t border-border/50">
         <div className="container mx-auto px-4 text-center">
@@ -195,6 +224,28 @@ const Index = () => {
               )
             )}
           </div>
+        </div>
+      </section>
+
+      {/* Explore More / Related Courses */}
+      <section id="explore" className="py-24 container mx-auto px-4">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-4">
+            <Compass className="w-3.5 h-3.5" />
+            EXPLORE MORE
+          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            Related <span className="text-gradient-primary">Courses & Tools</span>
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Once you're comfortable with the basics, level up with these technologies built on top of Python, C, C++, HTML, CSS and JavaScript.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {relatedCourses.map((c) => (
+            <RelatedCourseCard key={c.name} course={c} />
+          ))}
         </div>
       </section>
 
