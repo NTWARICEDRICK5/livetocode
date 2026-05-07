@@ -3,10 +3,10 @@ import { useParams, Link } from "react-router-dom";
 import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CodeBlock from "@/components/CodeBlock";
+import LessonStageTabs from "@/components/LessonStageTabs";
 import RelatedCourseCard from "@/components/RelatedCourseCard";
 import { relatedCourses } from "@/data/relatedCourses";
-import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 const CoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -187,64 +187,18 @@ const CoursePage = () => {
               <p className="text-muted-foreground text-lg">{lesson.description}</p>
             </div>
 
-            {/* Content */}
-            <div className="mb-8 card-glass rounded-2xl p-6 md:p-8">
-              <div className="prose-custom space-y-1">
-                {renderContent(lesson.content)}
-              </div>
-            </div>
-
-            {/* Code example */}
+            {/* 5-stage learning cycle: Explain → Demonstrate → Practice → Test → Apply */}
             <div className="mb-8">
-              <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-md bg-primary/20 text-primary flex items-center justify-center text-sm">{"</>"}</span>
-                Code Example
-              </h3>
-              <CodeBlock code={lesson.code} output={lesson.output} language={course.name} />
+              <LessonStageTabs
+                courseId={course.id}
+                courseName={course.name}
+                lessonId={lesson.id}
+                explainContent={renderContent(lesson.content)}
+                demoCode={lesson.code}
+                demoOutput={lesson.output}
+                onAllStagesDone={markComplete}
+              />
             </div>
-
-            {/* Try it yourself - live editor */}
-            {(() => {
-              const slugMap: Record<string, string> = {
-                python: "python",
-                c: "c",
-                cpp: "cpp",
-                javascript: "javascript",
-                html: "html-css-js",
-                css: "html-css-js",
-              };
-              const slug = slugMap[course.id];
-              if (!slug) return null;
-              return (
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-md bg-primary/20 text-primary flex items-center justify-center text-sm">
-                        <Play className="w-3.5 h-3.5" />
-                      </span>
-                      Try It Yourself
-                    </h3>
-                    <Link
-                      to="/playground"
-                      className="text-xs text-primary hover:underline font-semibold"
-                    >
-                      Open full playground →
-                    </Link>
-                  </div>
-                  <div className="rounded-xl overflow-hidden border border-border/50 shadow-xl">
-                    <iframe
-                      src={`https://onecompiler.com/embed/${slug}?hideLanguageSelection=true&hideTitle=true&theme=dark`}
-                      title={`${course.name} live editor`}
-                      className="w-full h-[520px] bg-[hsl(220_25%_5%)] border-0"
-                      allow="clipboard-write"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    💡 Edit the code and hit <span className="text-primary font-semibold">Run</span> to see your output instantly.
-                  </p>
-                </div>
-              );
-            })()}
 
             {/* Navigation */}
             <div className="flex items-center justify-between pt-6 border-t border-border/50">
