@@ -3,14 +3,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
+import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
 
-type RunnerKind = "iframe" | "wandbox" | "browser-js";
+type RunnerKind = "iframe" | "remote" | "browser-js";
 
 interface PlaygroundLang {
   id: string;
   label: string;
   icon: string;
-  wandboxCompiler?: string;
   starter: string;
   runner: RunnerKind;
 }
@@ -20,24 +20,21 @@ const LANGS: PlaygroundLang[] = [
     id: "python",
     label: "Python",
     icon: "🐍",
-    wandboxCompiler: "cpython-3.13.8",
-    runner: "wandbox",
+    runner: "remote",
     starter: `# Write Python here\nname = "Learner"\nprint(f"Hello, {name}! Welcome to CodeLearn.")\nfor i in range(1, 4):\n    print("Line", i)\n`,
   },
   {
     id: "c",
     label: "C",
     icon: "⚙️",
-    wandboxCompiler: "gcc-head-c",
-    runner: "wandbox",
+    runner: "remote",
     starter: `#include <stdio.h>\n\nint main(void) {\n    printf("Hello from C!\\n");\n    for (int i = 1; i <= 3; i++) {\n        printf("Line %d\\n", i);\n    }\n    return 0;\n}\n`,
   },
   {
     id: "cpp",
     label: "C++",
     icon: "⚡",
-    wandboxCompiler: "gcc-head",
-    runner: "wandbox",
+    runner: "remote",
     starter: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello from C++!" << endl;\n    for (int i = 1; i <= 3; i++) cout << "Line " << i << endl;\n    return 0;\n}\n`,
   },
   {
@@ -201,21 +198,8 @@ const Playground = () => {
       } else if (active.runner === "browser-js") {
         setOutput(runJsInBrowser(code));
       } else {
-        const res = await fetch("https://wandbox.org/api/compile.json", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            compiler: active.wandboxCompiler,
-            code,
-          }),
-        });
-        if (!res.ok) throw new Error(`Wandbox HTTP ${res.status}`);
-        const data = await res.json();
-        const compileErr = data?.compiler_error ?? "";
-        const stdout = data?.program_output ?? "";
-        const stderr = data?.program_error ?? "";
-        const combined = [compileErr, stdout, stderr].filter(Boolean).join("\n").trim();
-        setOutput(combined || "(no output)");
+        const result = await runRemoteCode(active.id as RemoteCodeLanguage, code);
+        setOutput(result.output || "(no output)");
       }
     } catch (e: any) {
       setOutput("Error: " + (e?.message ?? "Failed to run"));
@@ -511,7 +495,7 @@ const Playground = () => {
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-8">
-            💡 Python, C, C++ and JavaScript run via the Piston API. HTML & CSS render live in your browser.
+            💡 Python, C and C++ run through the fast Cloud runner. JavaScript, HTML and CSS run live in your browser.
           </p>
         </div>
       </main>
