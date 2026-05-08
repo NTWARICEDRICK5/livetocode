@@ -10,12 +10,11 @@ interface PracticeEditorProps {
   onSolved?: () => void;
 }
 
-// Map course ids to Piston runtimes (HTML/CSS run in iframe)
-const PISTON: Record<string, { language: string; version: string; filename: string }> = {
-  python: { language: "python", version: "3.10.0", filename: "main.py" },
-  c: { language: "c", version: "10.2.0", filename: "main.c" },
-  cpp: { language: "cpp", version: "10.2.0", filename: "main.cpp" },
-  javascript: { language: "javascript", version: "18.15.0", filename: "main.js" },
+// Map course ids to Wandbox compilers (HTML/CSS run in iframe, JS runs in-browser)
+const WANDBOX: Record<string, string> = {
+  python: "cpython-3.13.8",
+  c: "gcc-head-c",
+  cpp: "gcc-head",
 };
 
 const buildHtmlDoc = (code: string, courseId: string) => {
