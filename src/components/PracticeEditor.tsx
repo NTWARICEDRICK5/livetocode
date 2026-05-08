@@ -59,23 +59,45 @@ const PracticeEditor = ({
     checkSolved(code);
   };
 
-  const runPiston = async () => {
-    const cfg = PISTON[courseId];
-    if (!cfg) return;
+  const runJsBrowser = () => {
+    const logs: string[] = [];
+    const fmt = (a: any) => (typeof a === "string" ? a : (() => { try { return JSON.stringify(a); } catch { return String(a); } })());
+    const sandbox = {
+      log: (...a: any[]) => logs.push(a.map(fmt).join(" ")),
+      error: (...a: any[]) => logs.push("[error] " + a.map(fmt).join(" ")),
+      warn: (...a: any[]) => logs.push("[warn] " + a.map(fmt).join(" ")),
+      info: (...a: any[]) => logs.push(a.map(fmt).join(" ")),
+    };
+    try {
+      // eslint-disable-next-line no-new-func
+      new Function("console", `"use strict";\n${code}`)(sandbox);
+    } catch (e: any) {
+      logs.push("Error: " + (e?.message ?? String(e)));
+    }
+    const out = logs.join("\n") || "(no output)";
+    setOutput(out);
+    checkSolved(out);
+  };
+
+  const runRemote = async () => {
+    const compiler = WANDBOX[courseId];
+    if (!compiler) {
+      if (courseId === "javascript") return runJsBrowser();
+      return;
+    }
     setRunning(true);
     setOutput("Running...");
     try {
-      const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+      const res = await fetch("https://wandbox.org/api/compile.json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: cfg.language,
-          version: cfg.version,
-          files: [{ name: cfg.filename, content: code }],
-        }),
+        body: JSON.stringify({ compiler, code }),
       });
       const data = await res.json();
-      const out = (data.run?.stdout || "") + (data.run?.stderr ? `\n${data.run.stderr}` : "");
+      const out = [data?.compiler_error, data?.program_output, data?.program_error]
+        .filter(Boolean)
+        .join("\n")
+        .trim();
       setOutput(out || "(no output)");
       checkSolved(out);
     } catch (e: any) {
