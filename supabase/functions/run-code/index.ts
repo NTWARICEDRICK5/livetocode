@@ -31,7 +31,7 @@ const runWithWandbox = async (language: Language, code: string) => {
     const res = await fetch("https://wandbox.org/api/compile.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ compiler, code, options: "warning,gnu++2b" }),
+      body: JSON.stringify({ compiler, code }),
       signal: controller.signal,
     });
 
