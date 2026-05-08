@@ -1,0 +1,4 @@
+project_id = "dnafrxgobkablihnbyrj"
+
+[functions.run-code]
+verify_jwt = false

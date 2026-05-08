@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, CheckCircle2, Lightbulb } from "lucide-react";
+import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
 
 interface PracticeEditorProps {
   courseId: string;
@@ -9,13 +10,6 @@ interface PracticeEditorProps {
   expectedOutputContains?: string;
   onSolved?: () => void;
 }
-
-// Map course ids to Wandbox compilers (HTML/CSS run in iframe, JS runs in-browser)
-const WANDBOX: Record<string, string> = {
-  python: "cpython-3.13.8",
-  c: "gcc-head-c",
-  cpp: "gcc-head",
-};
 
 const buildHtmlDoc = (code: string, courseId: string) => {
   // For HTML lessons the code is full markup; for CSS it usually contains <style> + markup.
@@ -80,24 +74,14 @@ const PracticeEditor = ({
   };
 
   const runRemote = async () => {
-    const compiler = WANDBOX[courseId];
-    if (!compiler) {
+    if (!(["python", "c", "cpp"] as string[]).includes(courseId)) {
       if (courseId === "javascript") return runJsBrowser();
       return;
     }
     setRunning(true);
     setOutput("Running...");
     try {
-      const res = await fetch("https://wandbox.org/api/compile.json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ compiler, code }),
-      });
-      const data = await res.json();
-      const out = [data?.compiler_error, data?.program_output, data?.program_error]
-        .filter(Boolean)
-        .join("\n")
-        .trim();
+      const { output: out } = await runRemoteCode(courseId as RemoteCodeLanguage, code);
       setOutput(out || "(no output)");
       checkSolved(out);
     } catch (e: any) {
