@@ -115,7 +115,7 @@ const PracticeEditor = ({
     }
   };
 
-  const run = () => (isWeb ? runWeb() : runPiston());
+  const run = () => (isWeb ? runWeb() : courseId === "javascript" ? runJsBrowser() : runRemote());
 
   const reset = () => {
     setCode(starter);
