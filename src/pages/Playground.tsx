@@ -4,14 +4,15 @@ import Footer from "@/components/Footer";
 import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
+type RunnerKind = "iframe" | "wandbox" | "browser-js";
+
 interface PlaygroundLang {
   id: string;
   label: string;
   icon: string;
-  pistonLang?: string;
-  pistonVersion?: string;
+  wandboxCompiler?: string;
   starter: string;
-  runner: "iframe" | "piston";
+  runner: RunnerKind;
 }
 
 const LANGS: PlaygroundLang[] = [
