@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, CheckCircle2, Lightbulb } from "lucide-react";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
 
