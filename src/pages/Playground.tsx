@@ -4,14 +4,15 @@ import Footer from "@/components/Footer";
 import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
+type RunnerKind = "iframe" | "wandbox" | "browser-js";
+
 interface PlaygroundLang {
   id: string;
   label: string;
   icon: string;
-  pistonLang?: string;
-  pistonVersion?: string;
+  wandboxCompiler?: string;
   starter: string;
-  runner: "iframe" | "piston";
+  runner: RunnerKind;
 }
 
 const LANGS: PlaygroundLang[] = [
@@ -19,36 +20,31 @@ const LANGS: PlaygroundLang[] = [
     id: "python",
     label: "Python",
     icon: "🐍",
-    pistonLang: "python",
-    pistonVersion: "3.10.0",
-    runner: "piston",
+    wandboxCompiler: "cpython-3.13.8",
+    runner: "wandbox",
     starter: `# Write Python here\nname = "Learner"\nprint(f"Hello, {name}! Welcome to CodeLearn.")\nfor i in range(1, 4):\n    print("Line", i)\n`,
   },
   {
     id: "c",
     label: "C",
     icon: "⚙️",
-    pistonLang: "c",
-    pistonVersion: "10.2.0",
-    runner: "piston",
+    wandboxCompiler: "gcc-head-c",
+    runner: "wandbox",
     starter: `#include <stdio.h>\n\nint main(void) {\n    printf("Hello from C!\\n");\n    for (int i = 1; i <= 3; i++) {\n        printf("Line %d\\n", i);\n    }\n    return 0;\n}\n`,
   },
   {
     id: "cpp",
     label: "C++",
     icon: "⚡",
-    pistonLang: "c++",
-    pistonVersion: "10.2.0",
-    runner: "piston",
+    wandboxCompiler: "gcc-head",
+    runner: "wandbox",
     starter: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello from C++!" << endl;\n    for (int i = 1; i <= 3; i++) cout << "Line " << i << endl;\n    return 0;\n}\n`,
   },
   {
     id: "javascript",
     label: "JavaScript",
     icon: "✨",
-    pistonLang: "javascript",
-    pistonVersion: "18.15.0",
-    runner: "piston",
+    runner: "browser-js",
     starter: `// Write JavaScript here\nconst name = "Learner";\nconsole.log(\`Hello, \${name}!\`);\n[1,2,3].forEach(n => console.log("Line", n));\n`,
   },
   {
@@ -169,6 +165,29 @@ const Playground = () => {
     return code;
   };
 
+  const runJsInBrowser = (src: string): string => {
+    const logs: string[] = [];
+    const fmt = (a: any) => {
+      if (typeof a === "string") return a;
+      try { return JSON.stringify(a); } catch { return String(a); }
+    };
+    const sandbox = {
+      log: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
+      error: (...args: any[]) => logs.push("[error] " + args.map(fmt).join(" ")),
+      warn: (...args: any[]) => logs.push("[warn] " + args.map(fmt).join(" ")),
+      info: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
+    };
+    try {
+      // eslint-disable-next-line no-new-func
+      const fn = new Function("console", `"use strict";\n${src}`);
+      const result = fn(sandbox);
+      if (result !== undefined) logs.push(fmt(result));
+    } catch (e: any) {
+      logs.push("Error: " + (e?.message ?? String(e)));
+    }
+    return logs.join("\n") || "(no output)";
+  };
+
   const handleRun = async () => {
     setRunning(true);
     setOutput("");
@@ -179,21 +198,23 @@ const Playground = () => {
         const url = URL.createObjectURL(blob);
         setIframeSrc(url);
         setOutput("✓ Rendered in preview");
+      } else if (active.runner === "browser-js") {
+        setOutput(runJsInBrowser(code));
       } else {
-        const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+        const res = await fetch("https://wandbox.org/api/compile.json", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            language: active.pistonLang,
-            version: active.pistonVersion,
-            files: [{ content: code }],
+            compiler: active.wandboxCompiler,
+            code,
           }),
         });
+        if (!res.ok) throw new Error(`Wandbox HTTP ${res.status}`);
         const data = await res.json();
-        const stdout = data?.run?.stdout ?? "";
-        const stderr = data?.run?.stderr ?? "";
-        const compile = data?.compile?.stderr ?? "";
-        const combined = [compile, stdout, stderr].filter(Boolean).join("\n").trim();
+        const compileErr = data?.compiler_error ?? "";
+        const stdout = data?.program_output ?? "";
+        const stderr = data?.program_error ?? "";
+        const combined = [compileErr, stdout, stderr].filter(Boolean).join("\n").trim();
         setOutput(combined || "(no output)");
       }
     } catch (e: any) {

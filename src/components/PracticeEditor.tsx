@@ -10,12 +10,11 @@ interface PracticeEditorProps {
   onSolved?: () => void;
 }
 
-// Map course ids to Piston runtimes (HTML/CSS run in iframe)
-const PISTON: Record<string, { language: string; version: string; filename: string }> = {
-  python: { language: "python", version: "3.10.0", filename: "main.py" },
-  c: { language: "c", version: "10.2.0", filename: "main.c" },
-  cpp: { language: "cpp", version: "10.2.0", filename: "main.cpp" },
-  javascript: { language: "javascript", version: "18.15.0", filename: "main.js" },
+// Map course ids to Wandbox compilers (HTML/CSS run in iframe, JS runs in-browser)
+const WANDBOX: Record<string, string> = {
+  python: "cpython-3.13.8",
+  c: "gcc-head-c",
+  cpp: "gcc-head",
 };
 
 const buildHtmlDoc = (code: string, courseId: string) => {
@@ -60,23 +59,45 @@ const PracticeEditor = ({
     checkSolved(code);
   };
 
-  const runPiston = async () => {
-    const cfg = PISTON[courseId];
-    if (!cfg) return;
+  const runJsBrowser = () => {
+    const logs: string[] = [];
+    const fmt = (a: any) => (typeof a === "string" ? a : (() => { try { return JSON.stringify(a); } catch { return String(a); } })());
+    const sandbox = {
+      log: (...a: any[]) => logs.push(a.map(fmt).join(" ")),
+      error: (...a: any[]) => logs.push("[error] " + a.map(fmt).join(" ")),
+      warn: (...a: any[]) => logs.push("[warn] " + a.map(fmt).join(" ")),
+      info: (...a: any[]) => logs.push(a.map(fmt).join(" ")),
+    };
+    try {
+      // eslint-disable-next-line no-new-func
+      new Function("console", `"use strict";\n${code}`)(sandbox);
+    } catch (e: any) {
+      logs.push("Error: " + (e?.message ?? String(e)));
+    }
+    const out = logs.join("\n") || "(no output)";
+    setOutput(out);
+    checkSolved(out);
+  };
+
+  const runRemote = async () => {
+    const compiler = WANDBOX[courseId];
+    if (!compiler) {
+      if (courseId === "javascript") return runJsBrowser();
+      return;
+    }
     setRunning(true);
     setOutput("Running...");
     try {
-      const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+      const res = await fetch("https://wandbox.org/api/compile.json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: cfg.language,
-          version: cfg.version,
-          files: [{ name: cfg.filename, content: code }],
-        }),
+        body: JSON.stringify({ compiler, code }),
       });
       const data = await res.json();
-      const out = (data.run?.stdout || "") + (data.run?.stderr ? `\n${data.run.stderr}` : "");
+      const out = [data?.compiler_error, data?.program_output, data?.program_error]
+        .filter(Boolean)
+        .join("\n")
+        .trim();
       setOutput(out || "(no output)");
       checkSolved(out);
     } catch (e: any) {
@@ -94,7 +115,7 @@ const PracticeEditor = ({
     }
   };
 
-  const run = () => (isWeb ? runWeb() : runPiston());
+  const run = () => (isWeb ? runWeb() : courseId === "javascript" ? runJsBrowser() : runRemote());
 
   const reset = () => {
     setCode(starter);
