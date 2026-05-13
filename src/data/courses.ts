@@ -270,6 +270,250 @@ print(dog.fetch("ball"))`,
 Whiskers says Meow!
 Rex fetches the ball!`,
       },
+      {
+        id: "strings",
+        title: "Strings & String Methods",
+        description: "Manipulate text with Python's powerful string methods.",
+        content: `Strings in Python are immutable sequences of characters. Python provides dozens of built-in methods for string manipulation, slicing, formatting, and searching.`,
+        code: `text = "  Hello, Python World!  "
+
+print(text.strip())              # Remove whitespace
+print(text.lower())              # lowercase
+print(text.upper())              # UPPERCASE
+print(text.replace("Python", "Coding"))
+print(text.split(","))           # Split by comma
+print(len(text.strip()))         # Length
+
+# Slicing
+s = "Programming"
+print(s[0:4])    # Prog
+print(s[-3:])    # ing
+print(s[::-1])   # reversed
+
+# f-strings
+name, score = "Ana", 95
+print(f"{name} scored {score}/100 ({score/100:.0%})")`,
+        output: `Hello, Python World!
+  hello, python world!  
+  HELLO, PYTHON WORLD!  
+  Hello, Coding World!  
+['  Hello', ' Python World!  ']
+20
+Prog
+ing
+gnimmargorP
+Ana scored 95/100 (95%)`,
+      },
+      {
+        id: "lists-dicts",
+        title: "Lists, Tuples, Sets & Dicts",
+        description: "Master Python's four core collection types.",
+        content: `Python has four built-in collection types: **list** (ordered, mutable), **tuple** (ordered, immutable), **set** (unique, unordered), and **dict** (key-value pairs).`,
+        code: `# List operations
+nums = [3, 1, 4, 1, 5, 9, 2, 6]
+nums.append(5)
+nums.sort()
+print(nums)
+
+# Tuple (immutable)
+point = (10, 20)
+x, y = point   # unpacking
+print(x, y)
+
+# Set (unique values)
+unique = set(nums)
+print(sorted(unique))
+
+# Dict
+user = {"name": "Eve", "age": 28, "skills": ["py", "sql"]}
+user["age"] = 29
+for key, value in user.items():
+    print(f"{key}: {value}")`,
+        output: `[1, 1, 2, 3, 4, 5, 5, 6, 9]
+10 20
+[1, 2, 3, 4, 5, 6, 9]
+name: Eve
+age: 29
+skills: ['py', 'sql']`,
+      },
+      {
+        id: "errors",
+        title: "Error Handling",
+        description: "Handle runtime errors gracefully with try/except.",
+        content: `Errors that occur during execution are called **exceptions**. Use \`try/except/else/finally\` blocks to catch and handle them so your program doesn't crash.`,
+        code: `def divide(a, b):
+    try:
+        result = a / b
+    except ZeroDivisionError:
+        print("Cannot divide by zero!")
+        return None
+    except TypeError:
+        print("Both arguments must be numbers!")
+        return None
+    else:
+        print("Division successful")
+        return result
+    finally:
+        print("Cleanup done")
+
+print(divide(10, 2))
+print(divide(10, 0))
+print(divide("a", 2))`,
+        output: `Division successful
+Cleanup done
+5.0
+Cannot divide by zero!
+Cleanup done
+None
+Both arguments must be numbers!
+Cleanup done
+None`,
+      },
+      {
+        id: "files",
+        title: "File I/O",
+        description: "Read from and write to files using Python.",
+        content: `Python makes file handling easy with the built-in \`open()\` function. Always use the \`with\` statement — it automatically closes the file.`,
+        code: `# Write to a file
+with open("notes.txt", "w") as f:
+    f.write("Line 1: Learning Python\\n")
+    f.write("Line 2: File I/O is easy\\n")
+
+# Read entire file
+with open("notes.txt", "r") as f:
+    content = f.read()
+    print(content)
+
+# Read line by line
+with open("notes.txt", "r") as f:
+    for i, line in enumerate(f, 1):
+        print(f"{i}: {line.strip()}")
+
+# Append
+with open("notes.txt", "a") as f:
+    f.write("Line 3: Appended later\\n")`,
+        output: `Line 1: Learning Python
+Line 2: File I/O is easy
+
+1: Line 1: Learning Python
+2: Line 2: File I/O is easy`,
+      },
+      {
+        id: "modules",
+        title: "Modules & Packages",
+        description: "Organize and reuse code with modules and the standard library.",
+        content: `A **module** is a Python file containing code you can import. Python ships with a huge **standard library** — math, datetime, json, random, os, and much more.`,
+        code: `import math
+import random
+from datetime import datetime, timedelta
+import json
+
+# math
+print(math.sqrt(16), math.pi, math.factorial(5))
+
+# random
+print(random.randint(1, 100))
+print(random.choice(["apple", "banana", "cherry"]))
+
+# datetime
+now = datetime.now()
+tomorrow = now + timedelta(days=1)
+print(now.strftime("%Y-%m-%d %H:%M"))
+print(tomorrow.strftime("%A"))
+
+# json
+data = {"name": "Sam", "scores": [90, 85, 88]}
+text = json.dumps(data, indent=2)
+print(text)
+parsed = json.loads(text)
+print(parsed["scores"])`,
+        output: `4.0 3.141592653589793 120
+57
+banana
+2026-05-13 14:30
+Thursday
+{
+  "name": "Sam",
+  "scores": [90, 85, 88]
+}
+[90, 85, 88]`,
+      },
+      {
+        id: "comprehensions",
+        title: "Comprehensions & Generators",
+        description: "Write elegant Pythonic code with comprehensions.",
+        content: `**List/dict/set comprehensions** create collections in a single line. **Generators** produce values lazily, saving memory.`,
+        code: `# List comprehension
+squares = [x**2 for x in range(1, 6)]
+print(squares)
+
+# With condition
+evens = [x for x in range(20) if x % 2 == 0]
+print(evens)
+
+# Dict comprehension
+word = "hello"
+counts = {c: word.count(c) for c in set(word)}
+print(counts)
+
+# Set comprehension
+unique_lens = {len(w) for w in ["hi", "bye", "yes", "no"]}
+print(unique_lens)
+
+# Generator (lazy)
+def fib():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+g = fib()
+print([next(g) for _ in range(8)])`,
+        output: `[1, 4, 9, 16, 25]
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+{'h': 1, 'e': 1, 'l': 2, 'o': 1}
+{2, 3}
+[0, 1, 1, 2, 3, 5, 8, 13]`,
+      },
+      {
+        id: "decorators",
+        title: "Decorators & Advanced Functions",
+        description: "Enhance functions with decorators and closures.",
+        content: `A **decorator** is a function that wraps another function to add behavior — perfect for logging, timing, authentication, and caching.`,
+        code: `import time
+from functools import wraps
+
+def timer(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f"{func.__name__} took {elapsed:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow_sum(n):
+    return sum(range(n))
+
+print(slow_sum(1_000_000))
+
+# Closure
+def make_counter():
+    count = 0
+    def inc():
+        nonlocal count
+        count += 1
+        return count
+    return inc
+
+counter = make_counter()
+print(counter(), counter(), counter())`,
+        output: `slow_sum took 0.0234s
+499999500000
+1 2 3`,
+      },
     ],
   },
   {
@@ -483,6 +727,165 @@ GPA: 3.90
 Name: Bob
 Age: 22
 GPA: 3.50`,
+      },
+      {
+        id: "operators",
+        title: "Operators & Expressions",
+        description: "Use arithmetic, logical, and bitwise operators in C.",
+        content: `C has a rich set of operators: arithmetic (+, -, *, /, %), comparison (==, !=, <, >), logical (&&, ||, !), and bitwise (&, |, ^, <<, >>).`,
+        code: `#include <stdio.h>
+
+int main() {
+    int a = 13, b = 4;
+    printf("a + b = %d\\n", a + b);
+    printf("a / b = %d (integer)\\n", a / b);
+    printf("a %% b = %d\\n", a % b);
+
+    // Logical
+    int age = 20;
+    int has_id = 1;
+    if (age >= 18 && has_id) printf("Allowed\\n");
+
+    // Bitwise
+    printf("5 & 3 = %d\\n", 5 & 3);
+    printf("5 | 3 = %d\\n", 5 | 3);
+    printf("5 ^ 3 = %d\\n", 5 ^ 3);
+    printf("1 << 4 = %d\\n", 1 << 4);
+
+    // Compound assignment
+    int x = 10;
+    x += 5; x *= 2;
+    printf("x = %d\\n", x);
+    return 0;
+}`,
+        output: `a + b = 17
+a / b = 3 (integer)
+a % b = 1
+Allowed
+5 & 3 = 1
+5 | 3 = 7
+5 ^ 3 = 6
+1 << 4 = 16
+x = 30`,
+      },
+      {
+        id: "control",
+        title: "Control Flow",
+        description: "if/else, switch, for, while, and do-while loops.",
+        content: `C provides familiar control structures. The \`switch\` statement is great for multi-way branching on integer/character values.`,
+        code: `#include <stdio.h>
+
+int main() {
+    // for loop
+    int sum = 0;
+    for (int i = 1; i <= 10; i++) sum += i;
+    printf("Sum 1..10 = %d\\n", sum);
+
+    // while loop
+    int n = 16, steps = 0;
+    while (n > 1) {
+        n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
+        steps++;
+    }
+    printf("Collatz steps: %d\\n", steps);
+
+    // switch
+    char grade = 'B';
+    switch (grade) {
+        case 'A': printf("Excellent\\n"); break;
+        case 'B': printf("Good\\n"); break;
+        case 'C': printf("OK\\n"); break;
+        default:  printf("Fail\\n");
+    }
+    return 0;
+}`,
+        output: `Sum 1..10 = 55
+Collatz steps: 4
+Good`,
+      },
+      {
+        id: "memory",
+        title: "Dynamic Memory (malloc/free)",
+        description: "Allocate memory at runtime with malloc, calloc, and free.",
+        content: `Use \`malloc\` / \`calloc\` to allocate memory on the **heap**, and \`free\` to release it. Forgetting to free causes memory leaks.`,
+        code: `#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n = 5;
+    int *arr = (int*) malloc(n * sizeof(int));
+    if (!arr) return 1;
+
+    for (int i = 0; i < n; i++) arr[i] = (i + 1) * (i + 1);
+
+    printf("Squares: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    printf("\\n");
+
+    // Resize with realloc
+    arr = realloc(arr, 10 * sizeof(int));
+    for (int i = n; i < 10; i++) arr[i] = i * 10;
+
+    printf("Extended: ");
+    for (int i = 0; i < 10; i++) printf("%d ", arr[i]);
+    printf("\\n");
+
+    free(arr);
+    return 0;
+}`,
+        output: `Squares: 1 4 9 16 25 
+Extended: 1 4 9 16 25 50 60 70 80 90 `,
+      },
+      {
+        id: "files-c",
+        title: "File I/O in C",
+        description: "Read from and write to files with FILE*, fopen, fprintf.",
+        content: `C uses \`FILE*\` pointers with \`fopen\`, \`fclose\`, \`fprintf\`, \`fscanf\`, \`fgets\`. Always check that fopen succeeded.`,
+        code: `#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("data.txt", "w");
+    if (!f) { printf("Error\\n"); return 1; }
+    fprintf(f, "name=Alice\\n");
+    fprintf(f, "age=30\\n");
+    fclose(f);
+
+    f = fopen("data.txt", "r");
+    char line[100];
+    while (fgets(line, sizeof(line), f)) {
+        printf("> %s", line);
+    }
+    fclose(f);
+    return 0;
+}`,
+        output: `> name=Alice
+> age=30
+`,
+      },
+      {
+        id: "preprocessor",
+        title: "Preprocessor & Macros",
+        description: "Use #include, #define, conditional compilation.",
+        content: `The C **preprocessor** runs before compilation, handling \`#include\`, \`#define\` macros, and \`#ifdef\` conditional compilation.`,
+        code: `#include <stdio.h>
+
+#define PI 3.14159
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define DEBUG 1
+
+int main() {
+    printf("Area = %.2f\\n", PI * SQUARE(5));
+    printf("Max = %d\\n", MAX(10, 25));
+
+#if DEBUG
+    printf("[debug] running in debug mode\\n");
+#endif
+    return 0;
+}`,
+        output: `Area = 78.54
+Max = 25
+[debug] running in debug mode`,
       },
     ],
   },
@@ -705,6 +1108,178 @@ Leaderboard:
 
 Found 8 at index: 4`,
       },
+      {
+        id: "io-cpp",
+        title: "I/O Streams & Strings",
+        description: "Use cin, cout, getline, and the std::string class.",
+        content: `C++ uses **streams** (\`cin\`, \`cout\`, \`cerr\`) for I/O. The \`std::string\` class is far safer and easier than C-style char arrays.`,
+        code: `#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int main() {
+    string name = "Coder";
+    int age = 21;
+
+    cout << "Hi " << name << " (" << age << ")\\n";
+
+    // String operations
+    string s = "Hello, World";
+    cout << s.length() << " chars\\n";
+    cout << s.substr(7) << "\\n";
+    cout << s.find("World") << "\\n";
+
+    // Build string with stringstream
+    stringstream ss;
+    ss << "User " << name << " is " << age;
+    string msg = ss.str();
+    cout << msg << endl;
+    return 0;
+}`,
+        output: `Hi Coder (21)
+12 chars
+World
+7
+User Coder is 21`,
+      },
+      {
+        id: "templates",
+        title: "Templates & Generics",
+        description: "Write type-independent code with templates.",
+        content: `**Templates** let you write functions and classes that work with any data type. They're how the STL achieves type safety.`,
+        code: `#include <iostream>
+using namespace std;
+
+template <typename T>
+T maxOf(T a, T b) { return a > b ? a : b; }
+
+template <typename T>
+class Box {
+    T value;
+public:
+    Box(T v) : value(v) {}
+    T get() const { return value; }
+};
+
+int main() {
+    cout << maxOf(3, 7) << endl;
+    cout << maxOf(2.5, 1.8) << endl;
+    cout << maxOf(string("apple"), string("banana")) << endl;
+
+    Box<int> a(42);
+    Box<string> b("hi");
+    cout << a.get() << " / " << b.get() << endl;
+    return 0;
+}`,
+        output: `7
+2.5
+banana
+42 / hi`,
+      },
+      {
+        id: "smart-ptrs",
+        title: "Smart Pointers & RAII",
+        description: "Manage memory safely with unique_ptr and shared_ptr.",
+        content: `Modern C++ uses **smart pointers** that auto-free memory when they go out of scope — no more \`delete\`!`,
+        code: `#include <iostream>
+#include <memory>
+using namespace std;
+
+struct Node {
+    int value;
+    Node(int v) : value(v) { cout << "build " << v << "\\n"; }
+    ~Node() { cout << "free " << value << "\\n"; }
+};
+
+int main() {
+    auto a = make_unique<Node>(1);
+    cout << "value = " << a->value << "\\n";
+
+    auto b = make_shared<Node>(2);
+    {
+        auto c = b;     // shared
+        cout << "use_count = " << b.use_count() << "\\n";
+    }
+    cout << "use_count = " << b.use_count() << "\\n";
+    return 0;
+}`,
+        output: `build 1
+value = 1
+build 2
+use_count = 2
+use_count = 1
+free 2
+free 1`,
+      },
+      {
+        id: "lambdas",
+        title: "Lambdas & Modern C++",
+        description: "Use lambda expressions, auto, and range-for.",
+        content: `Modern C++ (C++11+) supports **lambdas** — anonymous functions, perfect with STL algorithms.`,
+        code: `#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+
+int main() {
+    vector<int> nums = {5, 2, 8, 1, 9, 3, 7};
+
+    // Sort descending with lambda
+    sort(nums.begin(), nums.end(), [](int a, int b){ return a > b; });
+    for (int n : nums) cout << n << " ";
+    cout << endl;
+
+    // Count predicate
+    int big = count_if(nums.begin(), nums.end(), [](int x){ return x > 4; });
+    cout << "> 4 count: " << big << endl;
+
+    // Sum
+    int total = accumulate(nums.begin(), nums.end(), 0);
+    cout << "sum = " << total << endl;
+
+    // Capture
+    int threshold = 5;
+    auto over = [threshold](int x){ return x > threshold; };
+    cout << "any > 5? " << any_of(nums.begin(), nums.end(), over) << endl;
+    return 0;
+}`,
+        output: `9 8 7 5 3 2 1 
+> 4 count: 4
+sum = 35
+any > 5? 1`,
+      },
+      {
+        id: "exceptions",
+        title: "Exception Handling",
+        description: "Throw and catch errors using try/catch.",
+        content: `C++ uses \`try\` / \`catch\` / \`throw\` for error handling. Catch by const reference and prefer standard exceptions from \`<stdexcept>\`.`,
+        code: `#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+double safeDiv(double a, double b) {
+    if (b == 0) throw runtime_error("division by zero");
+    return a / b;
+}
+
+int main() {
+    try {
+        cout << safeDiv(10, 2) << endl;
+        cout << safeDiv(5, 0) << endl;
+    } catch (const runtime_error& e) {
+        cout << "Error: " << e.what() << endl;
+    } catch (...) {
+        cout << "Unknown error\\n";
+    }
+    cout << "program continues" << endl;
+    return 0;
+}`,
+        output: `5
+Error: division by zero
+program continues`,
+      },
     ],
   },
   {
@@ -890,6 +1465,103 @@ Instead of using \`<div>\` for everything, use meaningful tags!`,
 </body>
 </html>`,
         output: `[Well-structured page with header, navigation, main article, sidebar, and footer]`,
+      },
+      {
+        id: "tables",
+        title: "HTML Tables",
+        description: "Display tabular data using table, tr, td, and th.",
+        content: `Tables organize data in rows and columns. Use \`<thead>\`, \`<tbody>\`, and \`<tfoot>\` for proper structure and accessibility.`,
+        code: `<table border="1">
+  <caption>Course Catalog</caption>
+  <thead>
+    <tr><th>Course</th><th>Level</th><th>Hours</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Python</td><td>Beginner</td><td>8</td></tr>
+    <tr><td>C++</td><td>Intermediate</td><td>12</td></tr>
+    <tr><td>JavaScript</td><td>Beginner</td><td>10</td></tr>
+  </tbody>
+  <tfoot>
+    <tr><td colspan="2">Total</td><td>30</td></tr>
+  </tfoot>
+</table>`,
+        output: `[A bordered table with caption, header, three rows, and footer]`,
+      },
+      {
+        id: "media",
+        title: "Images, Audio & Video",
+        description: "Embed media with img, audio, video, and picture.",
+        content: `HTML5 makes media easy with native \`<audio>\` and \`<video>\` tags. Use \`<picture>\` for responsive images and always provide \`alt\` text.`,
+        code: `<img src="hero.jpg" srcset="hero@2x.jpg 2x"
+     alt="Mountain view" width="600" loading="lazy">
+
+<picture>
+  <source media="(max-width:600px)" srcset="small.jpg">
+  <img src="large.jpg" alt="Responsive hero">
+</picture>
+
+<audio controls>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<video controls width="500" poster="thumb.jpg">
+  <source src="movie.mp4" type="video/mp4">
+  <track src="captions.vtt" kind="subtitles" srclang="en">
+</video>
+
+<iframe src="https://example.com" width="600" height="400"
+        title="Example"></iframe>`,
+        output: `[Page renders responsive images, an audio player, video, and embedded iframe]`,
+      },
+      {
+        id: "meta-seo",
+        title: "Meta Tags & SEO",
+        description: "Configure metadata for browsers, search engines, and social media.",
+        content: `\`<meta>\` tags in the \`<head>\` provide info to search engines and social platforms (Open Graph, Twitter cards).`,
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeLearn — Learn to Code</title>
+  <meta name="description"
+        content="Free interactive courses for Python, C, C++, HTML, CSS, JS.">
+
+  <meta property="og:title" content="CodeLearn">
+  <meta property="og:description" content="Master coding from zero to hero.">
+  <meta property="og:image" content="https://codelearn.app/og.png">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="canonical" href="https://codelearn.app/">
+  <link rel="icon" href="/favicon.ico">
+</head>
+<body>...</body>
+</html>`,
+        output: `[Page indexes well in search engines and previews nicely on social media]`,
+      },
+      {
+        id: "accessibility",
+        title: "Accessibility (a11y)",
+        description: "Make pages usable for everyone with semantic markup and ARIA.",
+        content: `Accessible HTML works with screen readers and keyboards. Use semantic tags, label inputs, provide alt text, and add ARIA attributes when needed.`,
+        code: `<label for="email">Email address</label>
+<input id="email" type="email" required
+       aria-describedby="email-help">
+<small id="email-help">We'll never share your email.</small>
+
+<button aria-label="Close menu">
+  <svg aria-hidden="true">...</svg>
+</button>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div role="status" aria-live="polite">3 new messages</div>
+
+<img src="chart.png" alt="Revenue grew 40% in Q3">
+<img src="divider.png" alt="" role="presentation">`,
+        output: `[Page is fully usable with screen readers and keyboard navigation]`,
       },
     ],
   },
@@ -1153,6 +1825,139 @@ nav {
 .footer  { grid-area: footer; background: #333; }`,
         output: `[Complete page layout with header, sidebar, main content, and footer]`,
       },
+      {
+        id: "selectors",
+        title: "Advanced Selectors",
+        description: "Target elements precisely with combinators and pseudo-classes.",
+        content: `CSS selectors range from simple element/class/id targeting to powerful combinators and pseudo-classes/elements.`,
+        code: `/* Attribute selectors */
+input[type="email"] { border-color: #2196F3; }
+a[href^="https"]    { color: green; }
+a[href$=".pdf"]     { font-weight: bold; }
+
+/* Pseudo-classes */
+button:hover        { background: #1976D2; }
+input:focus         { outline: 2px solid #00d4ff; }
+li:nth-child(odd)   { background: #f5f5f5; }
+li:nth-child(3n)    { color: red; }
+p:first-of-type     { font-size: 1.2rem; }
+:not(.disabled)     { cursor: pointer; }
+
+/* Pseudo-elements */
+p::first-letter     { font-size: 2em; float: left; }
+p::selection        { background: yellow; }
+
+/* Combinators */
+nav > a             { /* direct children */ }
+h2 + p              { /* immediately after h2 */ }
+h2 ~ p              { /* any sibling p after h2 */ }`,
+        output: `[Specific elements styled based on attributes, state, and relationships]`,
+      },
+      {
+        id: "colors-typography",
+        title: "Colors, Fonts & Typography",
+        description: "Style text with web fonts and color systems.",
+        content: `CSS supports multiple color formats (hex, rgb, hsl) and rich typography controls. Use \`@font-face\` or Google Fonts for custom typefaces.`,
+        code: `/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: hsl(220, 15%, 20%);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+p { color: rgba(0, 0, 0, 0.75); }
+.muted { color: hsl(220, 10%, 50%); }
+.error { color: rgb(220, 38, 38); }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}`,
+        output: `[Beautiful typography with gradient heading and clean body text]`,
+      },
+      {
+        id: "responsive",
+        title: "Responsive Design",
+        description: "Build layouts that adapt to phones, tablets, and desktops.",
+        content: `Use **media queries**, **fluid units** (rem, %, vw, vh, clamp), and **mobile-first** design to make pages work on every screen.`,
+        code: `/* Mobile-first base */
+.container {
+  padding: 16px;
+  max-width: 100%;
+}
+
+/* Tablet (≥ 768px) */
+@media (min-width: 768px) {
+  .container { padding: 32px; max-width: 720px; margin: 0 auto; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .container { max-width: 960px; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Dark mode preference */
+@media (prefers-color-scheme: dark) {
+  body { background: #0f172a; color: #e2e8f0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}`,
+        output: `[Layout adapts smoothly from mobile through desktop and respects user preferences]`,
+      },
+      {
+        id: "variables",
+        title: "CSS Custom Properties (Variables)",
+        description: "Reuse values with CSS variables for themes and design systems.",
+        content: `Custom properties (\`--name\`) let you reuse values, build themes, and update styles dynamically with JavaScript.`,
+        code: `:root {
+  --primary: #00d4ff;
+  --primary-dark: #0099cc;
+  --bg: #ffffff;
+  --text: #1a1a2e;
+  --radius: 12px;
+  --space: 1rem;
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --text: #e2e8f0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding: var(--space);
+}
+
+.button {
+  background: var(--primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
+}
+
+.button:hover { background: var(--primary-dark); }`,
+        output: `[Themable design system that switches between light and dark modes]`,
+      },
     ],
   },
   {
@@ -1407,6 +2212,187 @@ getUser(1);`,
         output: `Name: Leanne Graham
 Email: Sincere@april.biz
 City: Gwenborough`,
+      },
+      {
+        id: "arrays-objects",
+        title: "Arrays & Objects",
+        description: "Master JavaScript's two core data structures.",
+        content: `Arrays are ordered lists; objects are key-value collections. Modern JS provides spread/rest, destructuring, and rich array methods.`,
+        code: `const nums = [1, 2, 3, 4, 5];
+console.log(nums.map(n => n * n));
+console.log(nums.filter(n => n > 2));
+console.log(nums.reduce((a, b) => a + b, 0));
+console.log([...nums, 6, 7]);
+
+const user = { name: "Lia", age: 24, city: "Paris" };
+const { name, age } = user;
+console.log(name, age);
+
+const updated = { ...user, age: 25 };
+console.log(updated);
+
+const [first, ...rest] = nums;
+console.log(first, rest);
+
+for (const [k, v] of Object.entries(user)) {
+  console.log(k, "=", v);
+}`,
+        output: `[1, 4, 9, 16, 25]
+[3, 4, 5]
+15
+[1, 2, 3, 4, 5, 6, 7]
+Lia 24
+{ name: 'Lia', age: 25, city: 'Paris' }
+1 [2, 3, 4, 5]
+name = Lia
+age = 24
+city = Paris`,
+      },
+      {
+        id: "control-flow",
+        title: "Control Flow & Loops",
+        description: "Use if/else, switch, for, while, and modern loops.",
+        content: `JS supports full control flow plus modern \`for...of\`, \`for...in\`, and short-circuit operators \`&&\`, \`||\`, \`??\`.`,
+        code: `const score = 78;
+const grade = score >= 90 ? "A" :
+              score >= 80 ? "B" :
+              score >= 70 ? "C" : "F";
+console.log("Grade:", grade);
+
+const day = "Mon";
+switch (day) {
+  case "Sat":
+  case "Sun": console.log("Weekend"); break;
+  default:    console.log("Weekday");
+}
+
+for (const fruit of ["apple", "kiwi"]) console.log(fruit);
+
+const obj = { a: 1, b: 2 };
+for (const key in obj) console.log(key, obj[key]);
+
+const name = null ?? "Guest";
+console.log("Hello,", name);`,
+        output: `Grade: C
+Weekday
+apple
+kiwi
+a 1
+b 2
+Hello, Guest`,
+      },
+      {
+        id: "classes-js",
+        title: "Classes & OOP",
+        description: "Build object-oriented code with ES6 classes.",
+        content: `JavaScript supports class syntax with constructors, methods, getters/setters, static members, and inheritance via \`extends\`.`,
+        code: `class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return \`\${this.name} makes a sound\`; }
+  static kingdom() { return "Animalia"; }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name);
+    this.breed = breed;
+  }
+  speak() { return \`\${this.name} barks!\`; }
+  get info() { return \`\${this.name} (\${this.breed})\`; }
+}
+
+const rex = new Dog("Rex", "Husky");
+console.log(rex.speak());
+console.log(rex.info);
+console.log(Animal.kingdom());
+console.log(rex instanceof Animal);`,
+        output: `Rex barks!
+Rex (Husky)
+Animalia
+true`,
+      },
+      {
+        id: "modules-js",
+        title: "ES Modules",
+        description: "Organize code with import and export.",
+        content: `ES modules let you split code across files. Use \`export\` to expose values and \`import\` to consume them.`,
+        code: `// math.js
+export const PI = 3.14159;
+export function area(r) { return PI * r * r; }
+export default function cube(n) { return n * n * n; }
+
+// app.js
+import cube, { PI, area } from "./math.js";
+
+console.log(PI);
+console.log(area(5));
+console.log(cube(3));
+
+import { area as circleArea } from "./math.js";
+console.log(circleArea(2));
+
+import * as math from "./math.js";
+console.log(math.PI);`,
+        output: `3.14159
+78.53975
+27
+12.56636
+3.14159`,
+      },
+      {
+        id: "errors-js",
+        title: "Error Handling",
+        description: "Catch errors with try/catch and throw custom errors.",
+        content: `Use \`try/catch/finally\` to handle runtime errors. Throw custom \`Error\` subclasses for clear, typed errors.`,
+        code: `class ValidationError extends Error {
+  constructor(field, msg) {
+    super(\`\${field}: \${msg}\`);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function register(user) {
+  if (!user.email) throw new ValidationError("email", "required");
+  if (user.age < 13) throw new ValidationError("age", "too young");
+  return { ok: true };
+}
+
+try {
+  register({ email: "a@b.com", age: 10 });
+} catch (e) {
+  if (e instanceof ValidationError) {
+    console.log("Invalid", e.field, "-", e.message);
+  } else {
+    console.log("Unknown error");
+  }
+} finally {
+  console.log("Validation finished");
+}`,
+        output: `Invalid age - age: too young
+Validation finished`,
+      },
+      {
+        id: "storage",
+        title: "LocalStorage & JSON",
+        description: "Persist data in the browser with localStorage.",
+        content: `\`localStorage\` stores key-value strings persistently in the browser. Combine it with \`JSON.stringify/parse\` to save objects.`,
+        code: `const todos = [
+  { id: 1, text: "Learn JS", done: true },
+  { id: 2, text: "Build app", done: false }
+];
+localStorage.setItem("todos", JSON.stringify(todos));
+
+const saved = JSON.parse(localStorage.getItem("todos") || "[]");
+console.log(saved.length, "todos loaded");
+
+saved.push({ id: 3, text: "Ship it", done: false });
+localStorage.setItem("todos", JSON.stringify(saved));
+
+localStorage.removeItem("oldKey");
+// localStorage.clear();
+// sessionStorage works the same but clears on tab close`,
+        output: `2 todos loaded`,
       },
     ],
   },
