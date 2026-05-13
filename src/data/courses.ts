@@ -728,6 +728,165 @@ Name: Bob
 Age: 22
 GPA: 3.50`,
       },
+      {
+        id: "operators",
+        title: "Operators & Expressions",
+        description: "Use arithmetic, logical, and bitwise operators in C.",
+        content: `C has a rich set of operators: arithmetic (+, -, *, /, %), comparison (==, !=, <, >), logical (&&, ||, !), and bitwise (&, |, ^, <<, >>).`,
+        code: `#include <stdio.h>
+
+int main() {
+    int a = 13, b = 4;
+    printf("a + b = %d\\n", a + b);
+    printf("a / b = %d (integer)\\n", a / b);
+    printf("a %% b = %d\\n", a % b);
+
+    // Logical
+    int age = 20;
+    int has_id = 1;
+    if (age >= 18 && has_id) printf("Allowed\\n");
+
+    // Bitwise
+    printf("5 & 3 = %d\\n", 5 & 3);
+    printf("5 | 3 = %d\\n", 5 | 3);
+    printf("5 ^ 3 = %d\\n", 5 ^ 3);
+    printf("1 << 4 = %d\\n", 1 << 4);
+
+    // Compound assignment
+    int x = 10;
+    x += 5; x *= 2;
+    printf("x = %d\\n", x);
+    return 0;
+}`,
+        output: `a + b = 17
+a / b = 3 (integer)
+a % b = 1
+Allowed
+5 & 3 = 1
+5 | 3 = 7
+5 ^ 3 = 6
+1 << 4 = 16
+x = 30`,
+      },
+      {
+        id: "control",
+        title: "Control Flow",
+        description: "if/else, switch, for, while, and do-while loops.",
+        content: `C provides familiar control structures. The \`switch\` statement is great for multi-way branching on integer/character values.`,
+        code: `#include <stdio.h>
+
+int main() {
+    // for loop
+    int sum = 0;
+    for (int i = 1; i <= 10; i++) sum += i;
+    printf("Sum 1..10 = %d\\n", sum);
+
+    // while loop
+    int n = 16, steps = 0;
+    while (n > 1) {
+        n = (n % 2 == 0) ? n / 2 : 3 * n + 1;
+        steps++;
+    }
+    printf("Collatz steps: %d\\n", steps);
+
+    // switch
+    char grade = 'B';
+    switch (grade) {
+        case 'A': printf("Excellent\\n"); break;
+        case 'B': printf("Good\\n"); break;
+        case 'C': printf("OK\\n"); break;
+        default:  printf("Fail\\n");
+    }
+    return 0;
+}`,
+        output: `Sum 1..10 = 55
+Collatz steps: 4
+Good`,
+      },
+      {
+        id: "memory",
+        title: "Dynamic Memory (malloc/free)",
+        description: "Allocate memory at runtime with malloc, calloc, and free.",
+        content: `Use \`malloc\` / \`calloc\` to allocate memory on the **heap**, and \`free\` to release it. Forgetting to free causes memory leaks.`,
+        code: `#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n = 5;
+    int *arr = (int*) malloc(n * sizeof(int));
+    if (!arr) return 1;
+
+    for (int i = 0; i < n; i++) arr[i] = (i + 1) * (i + 1);
+
+    printf("Squares: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    printf("\\n");
+
+    // Resize with realloc
+    arr = realloc(arr, 10 * sizeof(int));
+    for (int i = n; i < 10; i++) arr[i] = i * 10;
+
+    printf("Extended: ");
+    for (int i = 0; i < 10; i++) printf("%d ", arr[i]);
+    printf("\\n");
+
+    free(arr);
+    return 0;
+}`,
+        output: `Squares: 1 4 9 16 25 
+Extended: 1 4 9 16 25 50 60 70 80 90 `,
+      },
+      {
+        id: "files-c",
+        title: "File I/O in C",
+        description: "Read from and write to files with FILE*, fopen, fprintf.",
+        content: `C uses \`FILE*\` pointers with \`fopen\`, \`fclose\`, \`fprintf\`, \`fscanf\`, \`fgets\`. Always check that fopen succeeded.`,
+        code: `#include <stdio.h>
+
+int main() {
+    FILE *f = fopen("data.txt", "w");
+    if (!f) { printf("Error\\n"); return 1; }
+    fprintf(f, "name=Alice\\n");
+    fprintf(f, "age=30\\n");
+    fclose(f);
+
+    f = fopen("data.txt", "r");
+    char line[100];
+    while (fgets(line, sizeof(line), f)) {
+        printf("> %s", line);
+    }
+    fclose(f);
+    return 0;
+}`,
+        output: `> name=Alice
+> age=30
+`,
+      },
+      {
+        id: "preprocessor",
+        title: "Preprocessor & Macros",
+        description: "Use #include, #define, conditional compilation.",
+        content: `The C **preprocessor** runs before compilation, handling \`#include\`, \`#define\` macros, and \`#ifdef\` conditional compilation.`,
+        code: `#include <stdio.h>
+
+#define PI 3.14159
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define DEBUG 1
+
+int main() {
+    printf("Area = %.2f\\n", PI * SQUARE(5));
+    printf("Max = %d\\n", MAX(10, 25));
+
+#if DEBUG
+    printf("[debug] running in debug mode\\n");
+#endif
+    return 0;
+}`,
+        output: `Area = 78.54
+Max = 25
+[debug] running in debug mode`,
+      },
     ],
   },
   {
