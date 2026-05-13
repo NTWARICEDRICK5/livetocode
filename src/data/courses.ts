@@ -270,6 +270,250 @@ print(dog.fetch("ball"))`,
 Whiskers says Meow!
 Rex fetches the ball!`,
       },
+      {
+        id: "strings",
+        title: "Strings & String Methods",
+        description: "Manipulate text with Python's powerful string methods.",
+        content: `Strings in Python are immutable sequences of characters. Python provides dozens of built-in methods for string manipulation, slicing, formatting, and searching.`,
+        code: `text = "  Hello, Python World!  "
+
+print(text.strip())              # Remove whitespace
+print(text.lower())              # lowercase
+print(text.upper())              # UPPERCASE
+print(text.replace("Python", "Coding"))
+print(text.split(","))           # Split by comma
+print(len(text.strip()))         # Length
+
+# Slicing
+s = "Programming"
+print(s[0:4])    # Prog
+print(s[-3:])    # ing
+print(s[::-1])   # reversed
+
+# f-strings
+name, score = "Ana", 95
+print(f"{name} scored {score}/100 ({score/100:.0%})")`,
+        output: `Hello, Python World!
+  hello, python world!  
+  HELLO, PYTHON WORLD!  
+  Hello, Coding World!  
+['  Hello', ' Python World!  ']
+20
+Prog
+ing
+gnimmargorP
+Ana scored 95/100 (95%)`,
+      },
+      {
+        id: "lists-dicts",
+        title: "Lists, Tuples, Sets & Dicts",
+        description: "Master Python's four core collection types.",
+        content: `Python has four built-in collection types: **list** (ordered, mutable), **tuple** (ordered, immutable), **set** (unique, unordered), and **dict** (key-value pairs).`,
+        code: `# List operations
+nums = [3, 1, 4, 1, 5, 9, 2, 6]
+nums.append(5)
+nums.sort()
+print(nums)
+
+# Tuple (immutable)
+point = (10, 20)
+x, y = point   # unpacking
+print(x, y)
+
+# Set (unique values)
+unique = set(nums)
+print(sorted(unique))
+
+# Dict
+user = {"name": "Eve", "age": 28, "skills": ["py", "sql"]}
+user["age"] = 29
+for key, value in user.items():
+    print(f"{key}: {value}")`,
+        output: `[1, 1, 2, 3, 4, 5, 5, 6, 9]
+10 20
+[1, 2, 3, 4, 5, 6, 9]
+name: Eve
+age: 29
+skills: ['py', 'sql']`,
+      },
+      {
+        id: "errors",
+        title: "Error Handling",
+        description: "Handle runtime errors gracefully with try/except.",
+        content: `Errors that occur during execution are called **exceptions**. Use \`try/except/else/finally\` blocks to catch and handle them so your program doesn't crash.`,
+        code: `def divide(a, b):
+    try:
+        result = a / b
+    except ZeroDivisionError:
+        print("Cannot divide by zero!")
+        return None
+    except TypeError:
+        print("Both arguments must be numbers!")
+        return None
+    else:
+        print("Division successful")
+        return result
+    finally:
+        print("Cleanup done")
+
+print(divide(10, 2))
+print(divide(10, 0))
+print(divide("a", 2))`,
+        output: `Division successful
+Cleanup done
+5.0
+Cannot divide by zero!
+Cleanup done
+None
+Both arguments must be numbers!
+Cleanup done
+None`,
+      },
+      {
+        id: "files",
+        title: "File I/O",
+        description: "Read from and write to files using Python.",
+        content: `Python makes file handling easy with the built-in \`open()\` function. Always use the \`with\` statement — it automatically closes the file.`,
+        code: `# Write to a file
+with open("notes.txt", "w") as f:
+    f.write("Line 1: Learning Python\\n")
+    f.write("Line 2: File I/O is easy\\n")
+
+# Read entire file
+with open("notes.txt", "r") as f:
+    content = f.read()
+    print(content)
+
+# Read line by line
+with open("notes.txt", "r") as f:
+    for i, line in enumerate(f, 1):
+        print(f"{i}: {line.strip()}")
+
+# Append
+with open("notes.txt", "a") as f:
+    f.write("Line 3: Appended later\\n")`,
+        output: `Line 1: Learning Python
+Line 2: File I/O is easy
+
+1: Line 1: Learning Python
+2: Line 2: File I/O is easy`,
+      },
+      {
+        id: "modules",
+        title: "Modules & Packages",
+        description: "Organize and reuse code with modules and the standard library.",
+        content: `A **module** is a Python file containing code you can import. Python ships with a huge **standard library** — math, datetime, json, random, os, and much more.`,
+        code: `import math
+import random
+from datetime import datetime, timedelta
+import json
+
+# math
+print(math.sqrt(16), math.pi, math.factorial(5))
+
+# random
+print(random.randint(1, 100))
+print(random.choice(["apple", "banana", "cherry"]))
+
+# datetime
+now = datetime.now()
+tomorrow = now + timedelta(days=1)
+print(now.strftime("%Y-%m-%d %H:%M"))
+print(tomorrow.strftime("%A"))
+
+# json
+data = {"name": "Sam", "scores": [90, 85, 88]}
+text = json.dumps(data, indent=2)
+print(text)
+parsed = json.loads(text)
+print(parsed["scores"])`,
+        output: `4.0 3.141592653589793 120
+57
+banana
+2026-05-13 14:30
+Thursday
+{
+  "name": "Sam",
+  "scores": [90, 85, 88]
+}
+[90, 85, 88]`,
+      },
+      {
+        id: "comprehensions",
+        title: "Comprehensions & Generators",
+        description: "Write elegant Pythonic code with comprehensions.",
+        content: `**List/dict/set comprehensions** create collections in a single line. **Generators** produce values lazily, saving memory.`,
+        code: `# List comprehension
+squares = [x**2 for x in range(1, 6)]
+print(squares)
+
+# With condition
+evens = [x for x in range(20) if x % 2 == 0]
+print(evens)
+
+# Dict comprehension
+word = "hello"
+counts = {c: word.count(c) for c in set(word)}
+print(counts)
+
+# Set comprehension
+unique_lens = {len(w) for w in ["hi", "bye", "yes", "no"]}
+print(unique_lens)
+
+# Generator (lazy)
+def fib():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+g = fib()
+print([next(g) for _ in range(8)])`,
+        output: `[1, 4, 9, 16, 25]
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+{'h': 1, 'e': 1, 'l': 2, 'o': 1}
+{2, 3}
+[0, 1, 1, 2, 3, 5, 8, 13]`,
+      },
+      {
+        id: "decorators",
+        title: "Decorators & Advanced Functions",
+        description: "Enhance functions with decorators and closures.",
+        content: `A **decorator** is a function that wraps another function to add behavior — perfect for logging, timing, authentication, and caching.`,
+        code: `import time
+from functools import wraps
+
+def timer(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        elapsed = time.time() - start
+        print(f"{func.__name__} took {elapsed:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow_sum(n):
+    return sum(range(n))
+
+print(slow_sum(1_000_000))
+
+# Closure
+def make_counter():
+    count = 0
+    def inc():
+        nonlocal count
+        count += 1
+        return count
+    return inc
+
+counter = make_counter()
+print(counter(), counter(), counter())`,
+        output: `slow_sum took 0.0234s
+499999500000
+1 2 3`,
+      },
     ],
   },
   {
