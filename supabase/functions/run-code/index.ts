@@ -8,8 +8,13 @@ type Language = "python" | "c" | "cpp";
 
 const COMPILERS: Record<Language, string> = {
   python: "cpython-3.13.8",
-  c: "gcc-head-c",
-  cpp: "gcc-head",
+  c: "gcc-13.2.0-c",
+  cpp: "gcc-13.2.0",
+};
+
+const COMPILER_OPTIONS: Partial<Record<Language, string>> = {
+  cpp: "warning,gnu++2b",
+  c: "warning,c17",
 };
 
 const cache = new Map<string, { output: string; status: string; at: number }>();
@@ -31,7 +36,7 @@ const runWithWandbox = async (language: Language, code: string) => {
     const res = await fetch("https://wandbox.org/api/compile.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ compiler, code }),
+      body: JSON.stringify({ compiler, code, options: COMPILER_OPTIONS[language] ?? "" }),
       signal: controller.signal,
     });
 
