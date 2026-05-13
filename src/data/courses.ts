@@ -1108,6 +1108,178 @@ Leaderboard:
 
 Found 8 at index: 4`,
       },
+      {
+        id: "io-cpp",
+        title: "I/O Streams & Strings",
+        description: "Use cin, cout, getline, and the std::string class.",
+        content: `C++ uses **streams** (\`cin\`, \`cout\`, \`cerr\`) for I/O. The \`std::string\` class is far safer and easier than C-style char arrays.`,
+        code: `#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+int main() {
+    string name = "Coder";
+    int age = 21;
+
+    cout << "Hi " << name << " (" << age << ")\\n";
+
+    // String operations
+    string s = "Hello, World";
+    cout << s.length() << " chars\\n";
+    cout << s.substr(7) << "\\n";
+    cout << s.find("World") << "\\n";
+
+    // Build string with stringstream
+    stringstream ss;
+    ss << "User " << name << " is " << age;
+    string msg = ss.str();
+    cout << msg << endl;
+    return 0;
+}`,
+        output: `Hi Coder (21)
+12 chars
+World
+7
+User Coder is 21`,
+      },
+      {
+        id: "templates",
+        title: "Templates & Generics",
+        description: "Write type-independent code with templates.",
+        content: `**Templates** let you write functions and classes that work with any data type. They're how the STL achieves type safety.`,
+        code: `#include <iostream>
+using namespace std;
+
+template <typename T>
+T maxOf(T a, T b) { return a > b ? a : b; }
+
+template <typename T>
+class Box {
+    T value;
+public:
+    Box(T v) : value(v) {}
+    T get() const { return value; }
+};
+
+int main() {
+    cout << maxOf(3, 7) << endl;
+    cout << maxOf(2.5, 1.8) << endl;
+    cout << maxOf(string("apple"), string("banana")) << endl;
+
+    Box<int> a(42);
+    Box<string> b("hi");
+    cout << a.get() << " / " << b.get() << endl;
+    return 0;
+}`,
+        output: `7
+2.5
+banana
+42 / hi`,
+      },
+      {
+        id: "smart-ptrs",
+        title: "Smart Pointers & RAII",
+        description: "Manage memory safely with unique_ptr and shared_ptr.",
+        content: `Modern C++ uses **smart pointers** that auto-free memory when they go out of scope — no more \`delete\`!`,
+        code: `#include <iostream>
+#include <memory>
+using namespace std;
+
+struct Node {
+    int value;
+    Node(int v) : value(v) { cout << "build " << v << "\\n"; }
+    ~Node() { cout << "free " << value << "\\n"; }
+};
+
+int main() {
+    auto a = make_unique<Node>(1);
+    cout << "value = " << a->value << "\\n";
+
+    auto b = make_shared<Node>(2);
+    {
+        auto c = b;     // shared
+        cout << "use_count = " << b.use_count() << "\\n";
+    }
+    cout << "use_count = " << b.use_count() << "\\n";
+    return 0;
+}`,
+        output: `build 1
+value = 1
+build 2
+use_count = 2
+use_count = 1
+free 2
+free 1`,
+      },
+      {
+        id: "lambdas",
+        title: "Lambdas & Modern C++",
+        description: "Use lambda expressions, auto, and range-for.",
+        content: `Modern C++ (C++11+) supports **lambdas** — anonymous functions, perfect with STL algorithms.`,
+        code: `#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+
+int main() {
+    vector<int> nums = {5, 2, 8, 1, 9, 3, 7};
+
+    // Sort descending with lambda
+    sort(nums.begin(), nums.end(), [](int a, int b){ return a > b; });
+    for (int n : nums) cout << n << " ";
+    cout << endl;
+
+    // Count predicate
+    int big = count_if(nums.begin(), nums.end(), [](int x){ return x > 4; });
+    cout << "> 4 count: " << big << endl;
+
+    // Sum
+    int total = accumulate(nums.begin(), nums.end(), 0);
+    cout << "sum = " << total << endl;
+
+    // Capture
+    int threshold = 5;
+    auto over = [threshold](int x){ return x > threshold; };
+    cout << "any > 5? " << any_of(nums.begin(), nums.end(), over) << endl;
+    return 0;
+}`,
+        output: `9 8 7 5 3 2 1 
+> 4 count: 4
+sum = 35
+any > 5? 1`,
+      },
+      {
+        id: "exceptions",
+        title: "Exception Handling",
+        description: "Throw and catch errors using try/catch.",
+        content: `C++ uses \`try\` / \`catch\` / \`throw\` for error handling. Catch by const reference and prefer standard exceptions from \`<stdexcept>\`.`,
+        code: `#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+double safeDiv(double a, double b) {
+    if (b == 0) throw runtime_error("division by zero");
+    return a / b;
+}
+
+int main() {
+    try {
+        cout << safeDiv(10, 2) << endl;
+        cout << safeDiv(5, 0) << endl;
+    } catch (const runtime_error& e) {
+        cout << "Error: " << e.what() << endl;
+    } catch (...) {
+        cout << "Unknown error\\n";
+    }
+    cout << "program continues" << endl;
+    return 0;
+}`,
+        output: `5
+Error: division by zero
+program continues`,
+      },
     ],
   },
   {
