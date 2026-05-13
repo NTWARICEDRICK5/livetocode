@@ -1466,6 +1466,103 @@ Instead of using \`<div>\` for everything, use meaningful tags!`,
 </html>`,
         output: `[Well-structured page with header, navigation, main article, sidebar, and footer]`,
       },
+      {
+        id: "tables",
+        title: "HTML Tables",
+        description: "Display tabular data using table, tr, td, and th.",
+        content: `Tables organize data in rows and columns. Use \`<thead>\`, \`<tbody>\`, and \`<tfoot>\` for proper structure and accessibility.`,
+        code: `<table border="1">
+  <caption>Course Catalog</caption>
+  <thead>
+    <tr><th>Course</th><th>Level</th><th>Hours</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Python</td><td>Beginner</td><td>8</td></tr>
+    <tr><td>C++</td><td>Intermediate</td><td>12</td></tr>
+    <tr><td>JavaScript</td><td>Beginner</td><td>10</td></tr>
+  </tbody>
+  <tfoot>
+    <tr><td colspan="2">Total</td><td>30</td></tr>
+  </tfoot>
+</table>`,
+        output: `[A bordered table with caption, header, three rows, and footer]`,
+      },
+      {
+        id: "media",
+        title: "Images, Audio & Video",
+        description: "Embed media with img, audio, video, and picture.",
+        content: `HTML5 makes media easy with native \`<audio>\` and \`<video>\` tags. Use \`<picture>\` for responsive images and always provide \`alt\` text.`,
+        code: `<img src="hero.jpg" srcset="hero@2x.jpg 2x"
+     alt="Mountain view" width="600" loading="lazy">
+
+<picture>
+  <source media="(max-width:600px)" srcset="small.jpg">
+  <img src="large.jpg" alt="Responsive hero">
+</picture>
+
+<audio controls>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<video controls width="500" poster="thumb.jpg">
+  <source src="movie.mp4" type="video/mp4">
+  <track src="captions.vtt" kind="subtitles" srclang="en">
+</video>
+
+<iframe src="https://example.com" width="600" height="400"
+        title="Example"></iframe>`,
+        output: `[Page renders responsive images, an audio player, video, and embedded iframe]`,
+      },
+      {
+        id: "meta-seo",
+        title: "Meta Tags & SEO",
+        description: "Configure metadata for browsers, search engines, and social media.",
+        content: `\`<meta>\` tags in the \`<head>\` provide info to search engines and social platforms (Open Graph, Twitter cards).`,
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeLearn — Learn to Code</title>
+  <meta name="description"
+        content="Free interactive courses for Python, C, C++, HTML, CSS, JS.">
+
+  <meta property="og:title" content="CodeLearn">
+  <meta property="og:description" content="Master coding from zero to hero.">
+  <meta property="og:image" content="https://codelearn.app/og.png">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="canonical" href="https://codelearn.app/">
+  <link rel="icon" href="/favicon.ico">
+</head>
+<body>...</body>
+</html>`,
+        output: `[Page indexes well in search engines and previews nicely on social media]`,
+      },
+      {
+        id: "accessibility",
+        title: "Accessibility (a11y)",
+        description: "Make pages usable for everyone with semantic markup and ARIA.",
+        content: `Accessible HTML works with screen readers and keyboards. Use semantic tags, label inputs, provide alt text, and add ARIA attributes when needed.`,
+        code: `<label for="email">Email address</label>
+<input id="email" type="email" required
+       aria-describedby="email-help">
+<small id="email-help">We'll never share your email.</small>
+
+<button aria-label="Close menu">
+  <svg aria-hidden="true">...</svg>
+</button>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div role="status" aria-live="polite">3 new messages</div>
+
+<img src="chart.png" alt="Revenue grew 40% in Q3">
+<img src="divider.png" alt="" role="presentation">`,
+        output: `[Page is fully usable with screen readers and keyboard navigation]`,
+      },
     ],
   },
   {
