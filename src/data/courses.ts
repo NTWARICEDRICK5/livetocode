@@ -1825,6 +1825,139 @@ nav {
 .footer  { grid-area: footer; background: #333; }`,
         output: `[Complete page layout with header, sidebar, main content, and footer]`,
       },
+      {
+        id: "selectors",
+        title: "Advanced Selectors",
+        description: "Target elements precisely with combinators and pseudo-classes.",
+        content: `CSS selectors range from simple element/class/id targeting to powerful combinators and pseudo-classes/elements.`,
+        code: `/* Attribute selectors */
+input[type="email"] { border-color: #2196F3; }
+a[href^="https"]    { color: green; }
+a[href$=".pdf"]     { font-weight: bold; }
+
+/* Pseudo-classes */
+button:hover        { background: #1976D2; }
+input:focus         { outline: 2px solid #00d4ff; }
+li:nth-child(odd)   { background: #f5f5f5; }
+li:nth-child(3n)    { color: red; }
+p:first-of-type     { font-size: 1.2rem; }
+:not(.disabled)     { cursor: pointer; }
+
+/* Pseudo-elements */
+p::first-letter     { font-size: 2em; float: left; }
+p::selection        { background: yellow; }
+
+/* Combinators */
+nav > a             { /* direct children */ }
+h2 + p              { /* immediately after h2 */ }
+h2 ~ p              { /* any sibling p after h2 */ }`,
+        output: `[Specific elements styled based on attributes, state, and relationships]`,
+      },
+      {
+        id: "colors-typography",
+        title: "Colors, Fonts & Typography",
+        description: "Style text with web fonts and color systems.",
+        content: `CSS supports multiple color formats (hex, rgb, hsl) and rich typography controls. Use \`@font-face\` or Google Fonts for custom typefaces.`,
+        code: `/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: hsl(220, 15%, 20%);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+p { color: rgba(0, 0, 0, 0.75); }
+.muted { color: hsl(220, 10%, 50%); }
+.error { color: rgb(220, 38, 38); }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}`,
+        output: `[Beautiful typography with gradient heading and clean body text]`,
+      },
+      {
+        id: "responsive",
+        title: "Responsive Design",
+        description: "Build layouts that adapt to phones, tablets, and desktops.",
+        content: `Use **media queries**, **fluid units** (rem, %, vw, vh, clamp), and **mobile-first** design to make pages work on every screen.`,
+        code: `/* Mobile-first base */
+.container {
+  padding: 16px;
+  max-width: 100%;
+}
+
+/* Tablet (≥ 768px) */
+@media (min-width: 768px) {
+  .container { padding: 32px; max-width: 720px; margin: 0 auto; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .container { max-width: 960px; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Dark mode preference */
+@media (prefers-color-scheme: dark) {
+  body { background: #0f172a; color: #e2e8f0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}`,
+        output: `[Layout adapts smoothly from mobile through desktop and respects user preferences]`,
+      },
+      {
+        id: "variables",
+        title: "CSS Custom Properties (Variables)",
+        description: "Reuse values with CSS variables for themes and design systems.",
+        content: `Custom properties (\`--name\`) let you reuse values, build themes, and update styles dynamically with JavaScript.`,
+        code: `:root {
+  --primary: #00d4ff;
+  --primary-dark: #0099cc;
+  --bg: #ffffff;
+  --text: #1a1a2e;
+  --radius: 12px;
+  --space: 1rem;
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --text: #e2e8f0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding: var(--space);
+}
+
+.button {
+  background: var(--primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
+}
+
+.button:hover { background: var(--primary-dark); }`,
+        output: `[Themable design system that switches between light and dark modes]`,
+      },
     ],
   },
   {
