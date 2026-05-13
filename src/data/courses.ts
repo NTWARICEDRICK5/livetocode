@@ -2213,6 +2213,187 @@ getUser(1);`,
 Email: Sincere@april.biz
 City: Gwenborough`,
       },
+      {
+        id: "arrays-objects",
+        title: "Arrays & Objects",
+        description: "Master JavaScript's two core data structures.",
+        content: `Arrays are ordered lists; objects are key-value collections. Modern JS provides spread/rest, destructuring, and rich array methods.`,
+        code: `const nums = [1, 2, 3, 4, 5];
+console.log(nums.map(n => n * n));
+console.log(nums.filter(n => n > 2));
+console.log(nums.reduce((a, b) => a + b, 0));
+console.log([...nums, 6, 7]);
+
+const user = { name: "Lia", age: 24, city: "Paris" };
+const { name, age } = user;
+console.log(name, age);
+
+const updated = { ...user, age: 25 };
+console.log(updated);
+
+const [first, ...rest] = nums;
+console.log(first, rest);
+
+for (const [k, v] of Object.entries(user)) {
+  console.log(k, "=", v);
+}`,
+        output: `[1, 4, 9, 16, 25]
+[3, 4, 5]
+15
+[1, 2, 3, 4, 5, 6, 7]
+Lia 24
+{ name: 'Lia', age: 25, city: 'Paris' }
+1 [2, 3, 4, 5]
+name = Lia
+age = 24
+city = Paris`,
+      },
+      {
+        id: "control-flow",
+        title: "Control Flow & Loops",
+        description: "Use if/else, switch, for, while, and modern loops.",
+        content: `JS supports full control flow plus modern \`for...of\`, \`for...in\`, and short-circuit operators \`&&\`, \`||\`, \`??\`.`,
+        code: `const score = 78;
+const grade = score >= 90 ? "A" :
+              score >= 80 ? "B" :
+              score >= 70 ? "C" : "F";
+console.log("Grade:", grade);
+
+const day = "Mon";
+switch (day) {
+  case "Sat":
+  case "Sun": console.log("Weekend"); break;
+  default:    console.log("Weekday");
+}
+
+for (const fruit of ["apple", "kiwi"]) console.log(fruit);
+
+const obj = { a: 1, b: 2 };
+for (const key in obj) console.log(key, obj[key]);
+
+const name = null ?? "Guest";
+console.log("Hello,", name);`,
+        output: `Grade: C
+Weekday
+apple
+kiwi
+a 1
+b 2
+Hello, Guest`,
+      },
+      {
+        id: "classes-js",
+        title: "Classes & OOP",
+        description: "Build object-oriented code with ES6 classes.",
+        content: `JavaScript supports class syntax with constructors, methods, getters/setters, static members, and inheritance via \`extends\`.`,
+        code: `class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return \`\${this.name} makes a sound\`; }
+  static kingdom() { return "Animalia"; }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name);
+    this.breed = breed;
+  }
+  speak() { return \`\${this.name} barks!\`; }
+  get info() { return \`\${this.name} (\${this.breed})\`; }
+}
+
+const rex = new Dog("Rex", "Husky");
+console.log(rex.speak());
+console.log(rex.info);
+console.log(Animal.kingdom());
+console.log(rex instanceof Animal);`,
+        output: `Rex barks!
+Rex (Husky)
+Animalia
+true`,
+      },
+      {
+        id: "modules-js",
+        title: "ES Modules",
+        description: "Organize code with import and export.",
+        content: `ES modules let you split code across files. Use \`export\` to expose values and \`import\` to consume them.`,
+        code: `// math.js
+export const PI = 3.14159;
+export function area(r) { return PI * r * r; }
+export default function cube(n) { return n * n * n; }
+
+// app.js
+import cube, { PI, area } from "./math.js";
+
+console.log(PI);
+console.log(area(5));
+console.log(cube(3));
+
+import { area as circleArea } from "./math.js";
+console.log(circleArea(2));
+
+import * as math from "./math.js";
+console.log(math.PI);`,
+        output: `3.14159
+78.53975
+27
+12.56636
+3.14159`,
+      },
+      {
+        id: "errors-js",
+        title: "Error Handling",
+        description: "Catch errors with try/catch and throw custom errors.",
+        content: `Use \`try/catch/finally\` to handle runtime errors. Throw custom \`Error\` subclasses for clear, typed errors.`,
+        code: `class ValidationError extends Error {
+  constructor(field, msg) {
+    super(\`\${field}: \${msg}\`);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function register(user) {
+  if (!user.email) throw new ValidationError("email", "required");
+  if (user.age < 13) throw new ValidationError("age", "too young");
+  return { ok: true };
+}
+
+try {
+  register({ email: "a@b.com", age: 10 });
+} catch (e) {
+  if (e instanceof ValidationError) {
+    console.log("Invalid", e.field, "-", e.message);
+  } else {
+    console.log("Unknown error");
+  }
+} finally {
+  console.log("Validation finished");
+}`,
+        output: `Invalid age - age: too young
+Validation finished`,
+      },
+      {
+        id: "storage",
+        title: "LocalStorage & JSON",
+        description: "Persist data in the browser with localStorage.",
+        content: `\`localStorage\` stores key-value strings persistently in the browser. Combine it with \`JSON.stringify/parse\` to save objects.`,
+        code: `const todos = [
+  { id: 1, text: "Learn JS", done: true },
+  { id: 2, text: "Build app", done: false }
+];
+localStorage.setItem("todos", JSON.stringify(todos));
+
+const saved = JSON.parse(localStorage.getItem("todos") || "[]");
+console.log(saved.length, "todos loaded");
+
+saved.push({ id: 3, text: "Ship it", done: false });
+localStorage.setItem("todos", JSON.stringify(saved));
+
+localStorage.removeItem("oldKey");
+// localStorage.clear();
+// sessionStorage works the same but clears on tab close`,
+        output: `2 todos loaded`,
+      },
     ],
   },
 ];
