@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, Code2, PenTool, ClipboardCheck, Rocket, CheckCircle2, Play } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
+import { useAuth } from "@/hooks/useAuth";
+import { upsertProgress } from "@/lib/progressSync";
 import Quiz from "@/components/Quiz";
 import PracticeEditor from "@/components/PracticeEditor";
 import { getLessonExtras } from "@/data/lessonExtras";
