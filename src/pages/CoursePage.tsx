@@ -61,8 +61,8 @@ const CoursePage = () => {
     setCompletedLessons(updated);
     if (user && course) {
       supabase.from("lesson_progress").upsert(
-        { user_id: user.id, course_id: course.id, lesson_id: course.lessons[activeLesson].id, completed: true, completed_stages: [] },
-        { onConflict: "user_id,course_id,lesson_id", ignoreDuplicates: false }
+        { user_id: user.id, course_id: course.id, lesson_id: course.lessons[activeLesson].id, completed: true },
+        { onConflict: "user_id,course_id,lesson_id" }
       ).then(() => {});
     }
   };
