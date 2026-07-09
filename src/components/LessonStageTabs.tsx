@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, Code2, PenTool, ClipboardCheck, Rocket, CheckCircle2, Play } from "lucide-react";
 import CodeBlock from "@/components/CodeBlock";
+import { useAuth } from "@/hooks/useAuth";
+import { upsertProgress } from "@/lib/progressSync";
 import Quiz from "@/components/Quiz";
 import PracticeEditor from "@/components/PracticeEditor";
 import { getLessonExtras } from "@/data/lessonExtras";
@@ -60,6 +62,8 @@ const LessonStageTabs = ({
     setActive("explain");
   }, [key]);
 
+  const { user } = useAuth();
+
   const markDone = (s: Stage) => {
     setDone((prev) => {
       if (prev.has(s)) return prev;
@@ -68,8 +72,9 @@ const LessonStageTabs = ({
       const all = loadAll();
       all[key] = Array.from(next);
       saveAll(all);
-      // Check if all 5 done
-      if (next.size === STAGES.length) onAllStagesDone?.();
+      const allDone = next.size === STAGES.length;
+      if (allDone) onAllStagesDone?.();
+      if (user) upsertProgress(user.id, courseId, lessonId, Array.from(next), allDone).catch(() => {});
       return next;
     });
   };

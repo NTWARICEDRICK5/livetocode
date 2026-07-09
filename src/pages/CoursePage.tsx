@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
@@ -7,13 +7,38 @@ import LessonStageTabs from "@/components/LessonStageTabs";
 import RelatedCourseCard from "@/components/RelatedCourseCard";
 import { relatedCourses } from "@/data/relatedCourses";
 import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { pullProgress } from "@/lib/progressSync";
+import { supabase } from "@/integrations/supabase/client";
 
 const CoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [activeLesson, setActiveLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Set<number>>(new Set());
+  const { user } = useAuth();
 
   const course = courses.find((c) => c.id === courseId);
+
+  // Hydrate completed lessons for this course from DB when signed in
+  useEffect(() => {
+    if (!user || !course) return;
+    (async () => {
+      await pullProgress(user.id);
+      const { data } = await supabase
+        .from("lesson_progress")
+        .select("lesson_id, completed")
+        .eq("user_id", user.id)
+        .eq("course_id", course.id)
+        .eq("completed", true);
+      if (!data) return;
+      const idxs = new Set<number>();
+      data.forEach((r) => {
+        const idx = course.lessons.findIndex((l) => l.id === r.lesson_id);
+        if (idx >= 0) idxs.add(idx);
+      });
+      setCompletedLessons(idxs);
+    })();
+  }, [user, course]);
 
   if (!course) {
     return (
@@ -34,6 +59,12 @@ const CoursePage = () => {
     const updated = new Set(completedLessons);
     updated.add(activeLesson);
     setCompletedLessons(updated);
+    if (user && course) {
+      supabase.from("lesson_progress").upsert(
+        { user_id: user.id, course_id: course.id, lesson_id: course.lessons[activeLesson].id, completed: true },
+        { onConflict: "user_id,course_id,lesson_id" }
+      ).then(() => {});
+    }
   };
 
   const goNext = () => {
