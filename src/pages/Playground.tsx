@@ -82,6 +82,14 @@ const LANGS: PlaygroundLang[] = [
     runner: "iframe",
     starter: `<!doctype html>\n<html>\n<head>\n<style>\n  body { font-family: sans-serif; background:#0b1220; color:#e2e8f0; padding:24px; }\n  button { background:#22d3ee; color:#0b1220; border:0; padding:10px 16px; border-radius:8px; font-weight:700; cursor:pointer; }\n</style>\n</head>\n<body>\n  <h1>Counter Demo</h1>\n  <p>Count: <span id="c">0</span></p>\n  <button onclick="document.getElementById('c').innerText = ++window._n || (window._n=1)">+1</button>\n</body>\n</html>\n`,
   },
+  {
+    id: "typescript",
+    label: "TypeScript",
+    icon: "🟦",
+    filename: "main.ts",
+    runner: "browser-ts",
+    starter: `// TypeScript runs here — types are compiled away before execution\ninterface User { name: string; level: "beginner" | "pro" }\n\nconst user: User = { name: "Learner", level: "beginner" };\n\nfunction greet(u: User): string {\n  return \`Hello \${u.name} (\${u.level})\`;\n}\n\nconsole.log(greet(user));\n[1, 2, 3].forEach((n: number) => console.log("Line", n));\n`,
+  },
 ];
 
 interface SavedRun {
