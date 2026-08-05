@@ -5,6 +5,7 @@ import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code
 import { toast } from "sonner";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
 import { SNIPPETS } from "@/data/playgroundSnippets";
+import { transform } from "sucrase";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type RunnerKind = "iframe" | "remote" | "browser-js";
+type RunnerKind = "iframe" | "remote" | "browser-js" | "browser-ts";
 
 interface PlaygroundLang {
   id: string;
@@ -220,6 +221,16 @@ const Playground = () => {
         setOutput("✓ Rendered in preview");
       } else if (active.runner === "browser-js") {
         setOutput(runJsInBrowser(code));
+      } else if (active.runner === "browser-ts") {
+        let js = code;
+        try {
+          js = transform(code, { transforms: ["typescript", "imports"] }).code;
+        } catch (e: any) {
+          setOutput("TypeScript error: " + (e?.message ?? String(e)));
+          setRunning(false);
+          return;
+        }
+        setOutput(runJsInBrowser(js));
       } else {
         const result = await runRemoteCode(active.id as RemoteCodeLanguage, code);
         setOutput(result.output || "(no output)");
