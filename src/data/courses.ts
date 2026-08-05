@@ -2396,4 +2396,325 @@ localStorage.removeItem("oldKey");
       },
     ],
   },
+  {
+    id: "typescript",
+    name: "TypeScript",
+    fullName: "TypeScript Programming",
+    description: "JavaScript with types — build large, safe apps that catch bugs before they run.",
+    longDescription:
+      "TypeScript is a typed superset of JavaScript created by Microsoft. It adds static types, interfaces, generics and powerful editor tooling on top of everything you already know from JavaScript, then compiles down to plain JS that runs anywhere.",
+    icon: "🟦",
+    color: "linear-gradient(135deg, #3178C6, #6BA8E8)",
+    level: "Intermediate",
+    duration: "7h",
+    topics: ["Types", "Interfaces", "Generics", "Narrowing", "Classes", "Utility Types", "Modules"],
+    whyLearn: [
+      "Catches bugs at compile time",
+      "Required by most modern teams",
+      "Amazing editor autocomplete",
+      "Powers React, Angular, Node apps",
+    ],
+    lessons: [
+      {
+        id: "ts-intro",
+        title: "Introduction to TypeScript",
+        description: "What TypeScript is and how it improves JavaScript.",
+        content: `TypeScript is JavaScript **plus types**. Every valid JavaScript file is already valid TypeScript — you add types gradually.
+
+**Why bother?**
+- Errors are caught while you type, not in production
+- Autocomplete that actually knows your data
+- Self-documenting code for teams
+- Compiles to plain JavaScript for any browser or Node version
+
+You write \`.ts\` files, run \`tsc\` (the compiler), and get \`.js\` out.`,
+        code: `// Plain JavaScript — no safety
+function greetJs(name) {
+  return "Hello, " + name.toUpperCase();
+}
+
+// TypeScript — the compiler protects you
+function greet(name: string): string {
+  return \`Hello, \${name.toUpperCase()}!\`;
+}
+
+console.log(greet("Cedrick"));
+
+// greet(42);  ❌ Argument of type 'number' is not assignable to 'string'`,
+        output: `Hello, CEDRICK!`,
+      },
+      {
+        id: "ts-types",
+        title: "Basic Types & Inference",
+        description: "Annotate variables, arrays, tuples and unions.",
+        content: `TypeScript has the JavaScript primitives (\`string\`, \`number\`, \`boolean\`, \`null\`, \`undefined\`) plus extras like \`any\`, \`unknown\`, \`never\` and \`tuple\`.
+
+Most of the time you don't need annotations — TypeScript **infers** the type from the value. Annotate function parameters, and let inference do the rest.`,
+        code: `let title: string = "CodeLearn";
+let learners = 1200;            // inferred as number
+let isFree: boolean = true;
+
+let scores: number[] = [90, 82, 77];
+let pair: [string, number] = ["python", 8];   // tuple
+
+type Level = "beginner" | "intermediate" | "advanced";  // union
+let level: Level = "beginner";
+
+let anything: unknown = "safe any";
+if (typeof anything === "string") console.log(anything.length);
+
+console.log(title, learners, isFree);
+console.log(scores.reduce((a, b) => a + b, 0) / scores.length);
+console.log(pair[0], "takes", pair[1], "hours");
+console.log("level:", level);`,
+        output: `8
+CodeLearn 1200 true
+83
+python takes 8 hours
+level: beginner`,
+      },
+      {
+        id: "ts-functions",
+        title: "Typed Functions",
+        description: "Parameters, return types, optional and default values.",
+        content: `Functions are where types pay off the most. You can type parameters, return values, optional params (\`?\`), defaults, and rest arguments.
+
+If a function returns nothing, its type is \`void\`.`,
+        code: `function add(a: number, b: number): number {
+  return a + b;
+}
+
+// optional + default
+function tag(text: string, prefix: string = "info", suffix?: string): string {
+  return \`[\${prefix}] \${text}\${suffix ?? ""}\`;
+}
+
+// rest params
+const total = (...nums: number[]): number => nums.reduce((a, b) => a + b, 0);
+
+// function type alias
+type Formatter = (value: number) => string;
+const money: Formatter = (v) => "$" + v.toFixed(2);
+
+console.log(add(2, 3));
+console.log(tag("Saved"));
+console.log(tag("Deleted", "warn", "!"));
+console.log(total(1, 2, 3, 4));
+console.log(money(19.5));`,
+        output: `5
+[info] Saved
+[warn] Deleted!
+10
+$19.50`,
+      },
+      {
+        id: "ts-interfaces",
+        title: "Interfaces & Type Aliases",
+        description: "Describe the shape of objects.",
+        content: `Use \`interface\` or \`type\` to describe object shapes. Interfaces can be extended and merged; type aliases can also describe unions and primitives.
+
+Rule of thumb: **interface** for object shapes you may extend, **type** for unions and computed types.`,
+        code: `interface User {
+  id: number;
+  name: string;
+  email?: string;        // optional
+  readonly createdAt: string;
+}
+
+interface Student extends User {
+  courses: string[];
+}
+
+type Result = { ok: true; data: string } | { ok: false; error: string };
+
+const s: Student = {
+  id: 1,
+  name: "Alice",
+  createdAt: "2026-01-01",
+  courses: ["python", "typescript"],
+};
+
+function show(r: Result) {
+  return r.ok ? "OK: " + r.data : "FAIL: " + r.error;
+}
+
+console.log(s.name, "studies", s.courses.length, "courses");
+console.log(show({ ok: true, data: "saved" }));
+console.log(show({ ok: false, error: "network" }));`,
+        output: `Alice studies 2 courses
+OK: saved
+FAIL: network`,
+      },
+      {
+        id: "ts-narrowing",
+        title: "Narrowing & Type Guards",
+        description: "Let TypeScript prove what a value is at runtime.",
+        content: `Narrowing is how TypeScript follows your \`if\` checks and figures out the exact type inside each branch — with \`typeof\`, \`in\`, \`instanceof\`, truthiness, and custom **type predicates** (\`x is T\`).`,
+        code: `type Cat = { kind: "cat"; meows: number };
+type Dog = { kind: "dog"; barks: number };
+type Pet = Cat | Dog;
+
+function describe(pet: Pet): string {
+  // discriminated union narrowing
+  if (pet.kind === "cat") return \`Cat meows \${pet.meows}x\`;
+  return \`Dog barks \${pet.barks}x\`;
+}
+
+function len(v: string | string[]): number {
+  return typeof v === "string" ? v.length : v.length;
+}
+
+// custom type guard
+function isNumberArray(v: unknown): v is number[] {
+  return Array.isArray(v) && v.every((x) => typeof x === "number");
+}
+
+console.log(describe({ kind: "cat", meows: 3 }));
+console.log(describe({ kind: "dog", barks: 5 }));
+console.log(len("hello"), len(["a", "b"]));
+console.log(isNumberArray([1, 2, 3]), isNumberArray(["a"]));`,
+        output: `Cat meows 3x
+Dog barks 5x
+5 2
+true false`,
+      },
+      {
+        id: "ts-generics",
+        title: "Generics",
+        description: "Reusable code that keeps its types.",
+        content: `Generics are type **parameters**. They let one function or class work with many types without losing type information (unlike \`any\`).
+
+\`<T>\` is just a placeholder — TypeScript fills it in at each call site.`,
+        code: `function first<T>(items: T[]): T | undefined {
+  return items[0];
+}
+
+interface Box<T> {
+  value: T;
+  map<U>(fn: (v: T) => U): Box<U>;
+}
+
+function box<T>(value: T): Box<T> {
+  return { value, map: (fn) => box(fn(value)) };
+}
+
+// constrained generic
+function longest<T extends { length: number }>(a: T, b: T): T {
+  return a.length >= b.length ? a : b;
+}
+
+console.log(first([10, 20, 30]));
+console.log(first(["a", "b"]));
+console.log(box(5).map((n) => n * 2).value);
+console.log(longest("typescript", "js"));`,
+        output: `10
+a
+10
+typescript`,
+      },
+      {
+        id: "ts-classes",
+        title: "Classes & Access Modifiers",
+        description: "public, private, readonly and implements.",
+        content: `TypeScript classes add \`public\`/\`private\`/\`protected\`, \`readonly\`, parameter properties, abstract classes and \`implements\` for interfaces.`,
+        code: `interface Payable {
+  pay(amount: number): string;
+}
+
+abstract class Account implements Payable {
+  protected balance = 0;
+  constructor(public readonly owner: string) {}
+  abstract label(): string;
+  pay(amount: number): string {
+    this.balance -= amount;
+    return \`\${this.label()} \${this.owner} paid \${amount}, balance \${this.balance}\`;
+  }
+  deposit(n: number): this { this.balance += n; return this; }
+}
+
+class Savings extends Account {
+  label() { return "[savings]"; }
+}
+
+const acc = new Savings("Cedrick").deposit(100);
+console.log(acc.pay(30));
+console.log(acc.owner);`,
+        output: `[savings] Cedrick paid 30, balance 70
+Cedrick`,
+      },
+      {
+        id: "ts-utility",
+        title: "Utility Types",
+        description: "Partial, Pick, Omit, Record, ReturnType and friends.",
+        content: `TypeScript ships built-in **utility types** that transform other types, so you never repeat a shape twice.
+
+Common ones: \`Partial<T>\`, \`Required<T>\`, \`Readonly<T>\`, \`Pick<T, K>\`, \`Omit<T, K>\`, \`Record<K, T>\`, \`ReturnType<F>\`.`,
+        code: `interface Course {
+  id: string;
+  title: string;
+  hours: number;
+  premium: boolean;
+}
+
+type DraftCourse = Partial<Course>;
+type CourseCard = Pick<Course, "id" | "title">;
+type PublicCourse = Omit<Course, "premium">;
+type CourseIndex = Record<string, CourseCard>;
+
+const draft: DraftCourse = { title: "TypeScript" };
+const card: CourseCard = { id: "ts", title: "TypeScript" };
+const index: CourseIndex = { ts: card };
+
+function loadCourse() { return { id: "ts", hours: 7 }; }
+type Loaded = ReturnType<typeof loadCourse>;
+const loaded: Loaded = { id: "ts", hours: 7 };
+
+console.log(draft.title);
+console.log(Object.keys(index));
+console.log(loaded.hours, "hours");`,
+        output: `TypeScript
+[ 'ts' ]
+7 hours`,
+      },
+      {
+        id: "ts-modules",
+        title: "Modules, tsconfig & Compiling",
+        description: "Organize a real TypeScript project.",
+        content: `A TypeScript project is driven by **tsconfig.json**. Key options:
+
+- \`strict: true\` — turn on every safety check (always do this)
+- \`target\` — which JS version to emit
+- \`module\` — module system (\`ESNext\` for bundlers)
+- \`outDir\` / \`rootDir\` — where compiled files go
+
+Run \`npx tsc\` to compile, or \`npx tsc --watch\` while developing.`,
+        code: `// types.ts
+export interface Lesson { id: string; title: string; }
+
+// data.ts
+import type { Lesson } from "./types";
+export const lessons: Lesson[] = [
+  { id: "ts-intro", title: "Introduction" },
+  { id: "ts-types", title: "Basic Types" },
+];
+
+// main.ts
+import { lessons } from "./data";
+lessons.forEach((l, i) => console.log(\`\${i + 1}. \${l.title}\`));
+
+/* tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "strict": true,
+    "outDir": "dist"
+  }
+}
+*/`,
+        output: `1. Introduction
+2. Basic Types`,
+      },
+    ],
+  },
 ];

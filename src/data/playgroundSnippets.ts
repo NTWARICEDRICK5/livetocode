@@ -55,4 +55,12 @@ export const SNIPPETS: Record<string, Snippet[]> = {
     { name: "counter", description: "Counter button", code: `<!doctype html>\n<html>\n<head><style>\n  body { font-family: sans-serif; padding: 24px; background:#0b1220; color:#e2e8f0; }\n  button { background:#22d3ee; color:#0b1220; border:0; padding:10px 16px; border-radius:8px; cursor:pointer; }\n</style></head>\n<body>\n  <h1>Counter: <span id="c">0</span></h1>\n  <button onclick="document.getElementById('c').innerText = ++window._n || (window._n=1)">+1</button>\n</body>\n</html>` },
     { name: "todo", description: "Tiny todo list", code: `<!doctype html>\n<html>\n<head><style>body{font-family:sans-serif;padding:24px;background:#0b1220;color:#e2e8f0}input,button{padding:8px;margin:4px}li{margin:4px 0}</style></head>\n<body>\n  <h1>Todo</h1>\n  <input id="t" placeholder="New task" />\n  <button onclick="var v=document.getElementById('t').value;if(v){var li=document.createElement('li');li.textContent=v;document.getElementById('list').appendChild(li);document.getElementById('t').value=''}">Add</button>\n  <ul id="list"></ul>\n</body>\n</html>` },
   ],
+  typescript: [
+    { name: "interface", description: "Object shape", code: `interface User {\n  id: number;\n  name: string;\n  email?: string;\n}` },
+    { name: "type", description: "Union type alias", code: `type Level = "beginner" | "intermediate" | "advanced";` },
+    { name: "func", description: "Typed function", code: `function add(a: number, b: number): number {\n  return a + b;\n}\n\nconsole.log(add(2, 3));` },
+    { name: "generic", description: "Generic function", code: `function first<T>(items: T[]): T | undefined {\n  return items[0];\n}\n\nconsole.log(first([1, 2, 3]));` },
+    { name: "class", description: "Class with modifiers", code: `class Counter {\n  private count = 0;\n  inc(): number { return ++this.count; }\n}\n\nconsole.log(new Counter().inc());` },
+    { name: "guard", description: "Type guard", code: `function isString(v: unknown): v is string {\n  return typeof v === "string";\n}\n\nconsole.log(isString("hi"));` },
+  ],
 };

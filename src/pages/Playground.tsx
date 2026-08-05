@@ -5,6 +5,7 @@ import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code
 import { toast } from "sonner";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
 import { SNIPPETS } from "@/data/playgroundSnippets";
+import { transform } from "sucrase";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type RunnerKind = "iframe" | "remote" | "browser-js";
+type RunnerKind = "iframe" | "remote" | "browser-js" | "browser-ts";
 
 interface PlaygroundLang {
   id: string;
@@ -81,6 +82,14 @@ const LANGS: PlaygroundLang[] = [
     filename: "demo.html",
     runner: "iframe",
     starter: `<!doctype html>\n<html>\n<head>\n<style>\n  body { font-family: sans-serif; background:#0b1220; color:#e2e8f0; padding:24px; }\n  button { background:#22d3ee; color:#0b1220; border:0; padding:10px 16px; border-radius:8px; font-weight:700; cursor:pointer; }\n</style>\n</head>\n<body>\n  <h1>Counter Demo</h1>\n  <p>Count: <span id="c">0</span></p>\n  <button onclick="document.getElementById('c').innerText = ++window._n || (window._n=1)">+1</button>\n</body>\n</html>\n`,
+  },
+  {
+    id: "typescript",
+    label: "TypeScript",
+    icon: "🟦",
+    filename: "main.ts",
+    runner: "browser-ts",
+    starter: `// TypeScript runs here — types are compiled away before execution\ninterface User { name: string; level: "beginner" | "pro" }\n\nconst user: User = { name: "Learner", level: "beginner" };\n\nfunction greet(u: User): string {\n  return \`Hello \${u.name} (\${u.level})\`;\n}\n\nconsole.log(greet(user));\n[1, 2, 3].forEach((n: number) => console.log("Line", n));\n`,
   },
 ];
 
@@ -212,6 +221,16 @@ const Playground = () => {
         setOutput("✓ Rendered in preview");
       } else if (active.runner === "browser-js") {
         setOutput(runJsInBrowser(code));
+      } else if (active.runner === "browser-ts") {
+        let js = code;
+        try {
+          js = transform(code, { transforms: ["typescript", "imports"] }).code;
+        } catch (e: any) {
+          setOutput("TypeScript error: " + (e?.message ?? String(e)));
+          setRunning(false);
+          return;
+        }
+        setOutput(runJsInBrowser(js));
       } else {
         const result = await runRemoteCode(active.id as RemoteCodeLanguage, code);
         setOutput(result.output || "(no output)");

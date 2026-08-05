@@ -8,6 +8,10 @@ import NotFound from "./pages/NotFound";
 import CoursePage from "./pages/CoursePage";
 import Playground from "./pages/Playground";
 import AuthPage from "./pages/Auth";
+import TemplatesPage from "./pages/Templates";
+import Dashboard from "./pages/Dashboard";
+import Certify from "./pages/Certify";
+import Verify from "./pages/Verify";
 import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
@@ -24,6 +28,10 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/course/:courseId" element={<CoursePage />} />
             <Route path="/playground" element={<Playground />} />
+            <Route path="/templates" element={<TemplatesPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/certify/:courseId" element={<Certify />} />
+            <Route path="/verify/:certId" element={<Verify />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

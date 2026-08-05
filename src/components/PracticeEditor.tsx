@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, CheckCircle2, Lightbulb } from "lucide-react";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
+import { transform } from "sucrase";
 
 interface PracticeEditorProps {
   courseId: string;
@@ -63,8 +64,12 @@ const PracticeEditor = ({
       info: (...a: any[]) => logs.push(a.map(fmt).join(" ")),
     };
     try {
+      let src = code;
+      if (courseId === "typescript") {
+        src = transform(code, { transforms: ["typescript", "imports"] }).code;
+      }
       // eslint-disable-next-line no-new-func
-      new Function("console", `"use strict";\n${code}`)(sandbox);
+      new Function("console", `"use strict";\n${src}`)(sandbox);
     } catch (e: any) {
       logs.push("Error: " + (e?.message ?? String(e)));
     }
@@ -75,7 +80,7 @@ const PracticeEditor = ({
 
   const runRemote = async () => {
     if (!(["python", "c", "cpp"] as string[]).includes(courseId)) {
-      if (courseId === "javascript") return runJsBrowser();
+      if (courseId === "javascript" || courseId === "typescript") return runJsBrowser();
       return;
     }
     setRunning(true);
