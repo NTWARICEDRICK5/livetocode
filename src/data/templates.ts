@@ -196,8 +196,7 @@ export const templates: Template[] = [
   h1 { font-size:24px; margin-bottom:6px; }
   p.sub { color:#93a4c0; font-size:14px; margin-bottom:24px; }
   label { display:block; font-size:13px; margin:14px 0 6px; color:#b7c4da; }
-  input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #2a3category; }
-  input { border:1px solid #2a3550; background:#0d1424; color:#e8eefb; outline:none; }
+  input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #2a3550; background:#0d1424; color:#e8eefb; outline:none; }
   input:focus { border-color:#22d3ee; box-shadow:0 0 0 3px rgba(34,211,238,.18); }
   button { width:100%; margin-top:22px; padding:13px; border:0; border-radius:10px; font-weight:700;
            background:#22d3ee; color:#06202a; cursor:pointer; }
@@ -237,8 +236,7 @@ export const templates: Template[] = [
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:system-ui,sans-serif; background:#0b0f1a; color:#e7edf8; display:grid; grid-template-columns:220px 1fr; min-height:100vh; }
-  aside { background:#0e1424; border-right:1px solid #1c2butt; }
-  aside { border-right:1px solid #1c2438; padding:24px 16px; }
+  aside { background:#0e1424; border-right:1px solid #1c2438; padding:24px 16px; }
   .brand { font-weight:800; margin-bottom:26px; }
   .brand span { color:#22d3ee; }
   nav a { display:block; padding:10px 12px; border-radius:9px; color:#93a4c0; text-decoration:none; font-size:14px; margin-bottom:4px; }
