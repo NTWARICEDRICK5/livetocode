@@ -10,11 +10,14 @@ const Navbar = () => {
   const links = [
     { label: "Courses", href: "/#courses" },
     { label: "Playground", href: "/playground" },
+    { label: "Templates", href: "/templates" },
+    { label: "Dashboard", href: "/dashboard" },
     { label: "Explore More", href: "/#explore" },
     { label: "Python", href: "/course/python" },
     { label: "C", href: "/course/c" },
     { label: "C++", href: "/course/cpp" },
     { label: "JS", href: "/course/javascript" },
+    { label: "TS", href: "/course/typescript" },
   ];
 
   const initial = (user?.user_metadata?.full_name || user?.email || "U").charAt(0).toUpperCase();

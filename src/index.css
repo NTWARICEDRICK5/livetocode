@@ -143,3 +143,10 @@ html {
 .token-comment { color: hsl(215 20% 45%); }
 .token-function { color: hsl(280 80% 70%); }
 .token-number { color: hsl(120 70% 60%); }
+
+/* Certificate print styles */
+@media print {
+  body { background: #fff; }
+  .no-print, nav { display: none !important; }
+  .print-cert { border: 2px solid #0ea5b7 !important; box-shadow: none !important; }
+}
