@@ -559,6 +559,170 @@ export const lessonExtras: Record<Key, LessonExtras> = {
       starter: `<div id="q"></div>\n<script>\n</script>`,
     },
   },
+
+  // ============ TYPESCRIPT ============
+  "typescript:ts-intro": {
+    practice: {
+      instructions: "Write a typed function `shout(text: string): string` that returns the text in UPPERCASE, then log shout(\"codelearn\").",
+      starter: `function shout(text: string): string {\n  // return the uppercase text\n}\n\nconsole.log(shout("codelearn"));`,
+      solution: `function shout(text: string): string {\n  return text.toUpperCase();\n}\n\nconsole.log(shout("codelearn"));`,
+      expectedOutputContains: "CODELEARN",
+    },
+    quiz: [
+      { q: "TypeScript is best described as:", options: ["A new language unrelated to JS", "A typed superset of JavaScript", "A JS framework", "A browser engine"], answer: 1 },
+      { q: "What does TypeScript compile to?", options: ["WebAssembly", "Machine code", "JavaScript", "Bytecode"], answer: 2 },
+      { q: "Which command compiles TypeScript?", options: ["node", "tsc", "npm build", "ts-run"], answer: 1 },
+    ],
+    apply: {
+      title: "Typed Greeter",
+      description: "Build a greeter that takes a name and an optional title and returns a formatted greeting.",
+      starter: `function greet(name: string, title?: string): string {\n  return "";\n}\nconsole.log(greet("Cedrick", "Eng."));`,
+    },
+  },
+  "typescript:ts-types": {
+    practice: {
+      instructions: "Declare `scores: number[]` with 3 numbers and log their average.",
+      starter: `const scores: number[] = [];\n// log the average\n`,
+      solution: `const scores: number[] = [80, 90, 100];\nconsole.log(scores.reduce((a, b) => a + b, 0) / scores.length);`,
+      expectedOutputContains: "90",
+    },
+    quiz: [
+      { q: "Which type means \"any value, but check before using\"?", options: ["any", "unknown", "never", "void"], answer: 1 },
+      { q: "A tuple type looks like:", options: ["[string, number]", "{string, number}", "(string|number)", "Array<string,number>"], answer: 0 },
+      { q: "A union of literals is written with:", options: ["&", "|", ",", "::"], answer: 1 },
+    ],
+    apply: {
+      title: "Course Level Type",
+      description: "Create a union type Level and a function that returns hours per level.",
+      starter: `type Level = "beginner" | "intermediate" | "advanced";\nfunction hours(l: Level): number {\n  return 0;\n}\nconsole.log(hours("advanced"));`,
+    },
+  },
+  "typescript:ts-functions": {
+    practice: {
+      instructions: "Write `total(...nums: number[]): number` and log total(1,2,3,4).",
+      starter: `const total = (...nums: number[]): number => {\n  return 0;\n};\nconsole.log(total(1, 2, 3, 4));`,
+      solution: `const total = (...nums: number[]): number => nums.reduce((a, b) => a + b, 0);\nconsole.log(total(1, 2, 3, 4));`,
+      expectedOutputContains: "10",
+    },
+    quiz: [
+      { q: "An optional parameter is marked with:", options: ["!", "?", "*", "..."], answer: 1 },
+      { q: "A function returning nothing has return type:", options: ["null", "void", "never", "undefined"], answer: 1 },
+      { q: "Rest parameters are typed as:", options: ["number", "number[]", "any", "tuple"], answer: 1 },
+    ],
+    apply: {
+      title: "Money Formatter",
+      description: "Create a Formatter type and implement a currency formatter with a configurable symbol.",
+      starter: `type Formatter = (value: number) => string;\nconst money: Formatter = (v) => "";\nconsole.log(money(19.5));`,
+    },
+  },
+  "typescript:ts-interfaces": {
+    practice: {
+      instructions: "Define an interface User with id and name, create one and log the name.",
+      starter: `interface User {\n  // fields here\n}\nconst u: User = {} as User;\nconsole.log(u.name);`,
+      solution: `interface User { id: number; name: string; }\nconst u: User = { id: 1, name: "Alice" };\nconsole.log(u.name);`,
+      expectedOutputContains: "Alice",
+    },
+    quiz: [
+      { q: "Which can be extended with `extends`?", options: ["interface", "const", "enum value", "function"], answer: 0 },
+      { q: "`readonly` on a property means:", options: ["It is private", "It cannot be reassigned", "It is optional", "It is static"], answer: 1 },
+      { q: "A discriminated union usually shares a:", options: ["length property", "literal `kind` field", "class", "generic"], answer: 1 },
+    ],
+    apply: {
+      title: "Result Type",
+      description: "Model an API result as a discriminated union and handle both branches.",
+      starter: `type Result = { ok: true; data: string } | { ok: false; error: string };\nfunction show(r: Result): string {\n  return "";\n}\nconsole.log(show({ ok: false, error: "timeout" }));`,
+    },
+  },
+  "typescript:ts-narrowing": {
+    practice: {
+      instructions: "Write `len(v: string | string[]): number` returning the length, and log len(\"hello\").",
+      starter: `function len(v: string | string[]): number {\n  return 0;\n}\nconsole.log(len("hello"));`,
+      solution: `function len(v: string | string[]): number {\n  return typeof v === "string" ? v.length : v.length;\n}\nconsole.log(len("hello"));`,
+      expectedOutputContains: "5",
+    },
+    quiz: [
+      { q: "Which operator checks a property exists for narrowing?", options: ["of", "in", "is", "as"], answer: 1 },
+      { q: "A custom type guard returns:", options: ["boolean", "v is T", "T", "unknown"], answer: 1 },
+      { q: "Narrowing a class instance uses:", options: ["typeof", "instanceof", "keyof", "infer"], answer: 1 },
+    ],
+    apply: {
+      title: "Pet Describer",
+      description: "Use a discriminated union of Cat | Dog and describe each pet.",
+      starter: `type Pet = { kind: "cat"; meows: number } | { kind: "dog"; barks: number };\nfunction describe(p: Pet): string {\n  return "";\n}\nconsole.log(describe({ kind: "dog", barks: 2 }));`,
+    },
+  },
+  "typescript:ts-generics": {
+    practice: {
+      instructions: "Write a generic `first<T>(items: T[]): T | undefined` and log first([10,20]).",
+      starter: `function first<T>(items: T[]): T | undefined {\n  return undefined;\n}\nconsole.log(first([10, 20]));`,
+      solution: `function first<T>(items: T[]): T | undefined {\n  return items[0];\n}\nconsole.log(first([10, 20]));`,
+      expectedOutputContains: "10",
+    },
+    quiz: [
+      { q: "Generics let you:", options: ["Skip types", "Reuse code while keeping types", "Speed up runtime", "Replace interfaces"], answer: 1 },
+      { q: "`<T extends { length: number }>` is a:", options: ["default", "constraint", "cast", "guard"], answer: 1 },
+      { q: "Using `any` instead of a generic:", options: ["Is identical", "Loses type information", "Is faster", "Is safer"], answer: 1 },
+    ],
+    apply: {
+      title: "Generic Box",
+      description: "Implement Box<T> with a map method that returns Box<U>.",
+      starter: `interface Box<T> { value: T; map<U>(fn: (v: T) => U): Box<U>; }\nfunction box<T>(value: T): Box<T> {\n  return { value, map: (fn) => box(fn(value)) };\n}\nconsole.log(box(4).map(n => n * 3).value);`,
+    },
+  },
+  "typescript:ts-classes": {
+    practice: {
+      instructions: "Create a class Counter with a private count and an inc() that returns the new value. Log counter.inc().",
+      starter: `class Counter {\n  private count = 0;\n  inc(): number {\n    return 0;\n  }\n}\nconsole.log(new Counter().inc());`,
+      solution: `class Counter {\n  private count = 0;\n  inc(): number { return ++this.count; }\n}\nconsole.log(new Counter().inc());`,
+      expectedOutputContains: "1",
+    },
+    quiz: [
+      { q: "Which modifier hides a member from outside the class?", options: ["public", "private", "static", "readonly"], answer: 1 },
+      { q: "`constructor(public name: string)` is called a:", options: ["getter", "parameter property", "decorator", "mixin"], answer: 1 },
+      { q: "A class promising to satisfy an interface uses:", options: ["extends", "implements", "satisfies", "with"], answer: 1 },
+    ],
+    apply: {
+      title: "Bank Account",
+      description: "Build an abstract Account with deposit/pay and a Savings subclass.",
+      starter: `abstract class Account {\n  protected balance = 0;\n  constructor(public readonly owner: string) {}\n  abstract label(): string;\n}\n`,
+    },
+  },
+  "typescript:ts-utility": {
+    practice: {
+      instructions: "Given interface Course, create type CourseCard = Pick<Course, \"id\" | \"title\"> and log a card title.",
+      starter: `interface Course { id: string; title: string; hours: number; }\ntype CourseCard = unknown;\nconst card = { id: "ts", title: "TypeScript" };\nconsole.log(card.title);`,
+      solution: `interface Course { id: string; title: string; hours: number; }\ntype CourseCard = Pick<Course, "id" | "title">;\nconst card: CourseCard = { id: "ts", title: "TypeScript" };\nconsole.log(card.title);`,
+      expectedOutputContains: "TypeScript",
+    },
+    quiz: [
+      { q: "Which utility makes every property optional?", options: ["Required", "Partial", "Readonly", "Record"], answer: 1 },
+      { q: "Removing keys from a type uses:", options: ["Pick", "Omit", "Exclude", "Extract"], answer: 1 },
+      { q: "`Record<string, number>` describes:", options: ["An array", "An object map of string keys to numbers", "A tuple", "A class"], answer: 1 },
+    ],
+    apply: {
+      title: "Draft Editor Types",
+      description: "Model a draft course with Partial and a public view with Omit.",
+      starter: `interface Course { id: string; title: string; hours: number; premium: boolean; }\ntype Draft = Partial<Course>;\ntype PublicCourse = Omit<Course, "premium">;\n`,
+    },
+  },
+  "typescript:ts-modules": {
+    practice: {
+      instructions: "Log each lesson title numbered 1., 2. from the lessons array.",
+      starter: `const lessons = [{ id: "a", title: "Intro" }, { id: "b", title: "Types" }];\n// log "1. Intro" and "2. Types"`,
+      solution: `const lessons = [{ id: "a", title: "Intro" }, { id: "b", title: "Types" }];\nlessons.forEach((l, i) => console.log(\`\${i + 1}. \${l.title}\`));`,
+      expectedOutputContains: "1. Intro",
+    },
+    quiz: [
+      { q: "Which tsconfig option enables all strict checks?", options: ["safe", "strict", "pedantic", "noAny"], answer: 1 },
+      { q: "`import type { X }` is used to:", options: ["Import runtime values", "Import only the type (erased at build)", "Import default export", "Import CSS"], answer: 1 },
+      { q: "Compiled output folder is set by:", options: ["outDir", "buildPath", "dist", "target"], answer: 0 },
+    ],
+    apply: {
+      title: "Mini Project Setup",
+      description: "Split types, data and main into three modules and print the lesson list.",
+      starter: `// types.ts\nexport interface Lesson { id: string; title: string }\n`,
+    },
+  },
 };
 
 export function getLessonExtras(courseId: string, lessonId: string): LessonExtras | null {
