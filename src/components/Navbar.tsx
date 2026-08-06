@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Code2, Menu, X, Mail, LogOut, User as UserIcon } from "lucide-react";
+import { Code2, Menu, X, Mail, LogOut, User as UserIcon, LayoutDashboard, NotebookPen, Bookmark } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -12,12 +12,9 @@ const Navbar = () => {
     { label: "Playground", href: "/playground" },
     { label: "Templates", href: "/templates" },
     { label: "Dashboard", href: "/dashboard" },
+    { label: "Notes", href: "/notes" },
+    { label: "Saved", href: "/saved" },
     { label: "Explore More", href: "/#explore" },
-    { label: "Python", href: "/course/python" },
-    { label: "C", href: "/course/c" },
-    { label: "C++", href: "/course/cpp" },
-    { label: "JS", href: "/course/javascript" },
-    { label: "TS", href: "/course/typescript" },
   ];
 
   const initial = (user?.user_metadata?.full_name || user?.email || "U").charAt(0).toUpperCase();
@@ -32,8 +29,8 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-lg tracking-tight">
-              <span className="text-gradient-primary">Code</span>
-              <span className="text-foreground">Learn</span>
+              <span className="text-gradient-primary">Quad</span>
+              <span className="text-foreground">rant</span>
             </span>
             <span className="text-[10px] text-muted-foreground/70 font-medium hidden sm:block">
               by NTWARI Cedrick
@@ -65,7 +62,10 @@ const Navbar = () => {
 
           {user ? (
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 border border-border">
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 border border-border hover:border-primary/50 transition-colors"
+              >
                 {avatar ? (
                   <img src={avatar} alt="" className="w-6 h-6 rounded-full" />
                 ) : (
@@ -76,7 +76,7 @@ const Navbar = () => {
                 <span className="text-sm text-foreground max-w-[120px] truncate">
                   {user.user_metadata?.full_name || user.email}
                 </span>
-              </div>
+              </Link>
               <button
                 onClick={signOut}
                 title="Sign out"
@@ -116,6 +116,15 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          {user && (
+            <Link
+              to="/profile"
+              className="flex items-center gap-2 px-6 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              <UserIcon className="w-4 h-4" /> My profile
+            </Link>
+          )}
           <a
             href="mailto:ntwaricedrick3@gmail.com"
             className="flex items-center gap-2 px-6 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-colors"
