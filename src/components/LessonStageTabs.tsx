@@ -74,7 +74,33 @@ const LessonStageTabs = ({
       saveAll(all);
       const allDone = next.size === STAGES.length;
       if (allDone) onAllStagesDone?.();
-      if (user) upsertProgress(user.id, courseId, lessonId, Array.from(next), allDone).catch(() => {});
+      if (user) {
+        upsertProgress(user.id, courseId, lessonId, Array.from(next), allDone).catch(() => {});
+        const xpKind: Record<Stage, ActivityKind | null> = {
+          explain: null,
+          demo: null,
+          practice: "exercise",
+          test: "quiz",
+          apply: "project",
+        };
+        const kind = xpKind[s];
+        if (kind) {
+          logActivity(user.id, kind, {
+            courseId,
+            lessonId,
+            label: `${s === "test" ? "Quiz passed" : s === "practice" ? "Exercise solved" : "Project completed"} — ${lessonId}`,
+            minutes: s === "apply" ? 15 : 5,
+          }).catch(() => {});
+        }
+        if (allDone) {
+          logActivity(user.id, "lesson", {
+            courseId,
+            lessonId,
+            label: `Lesson completed — ${lessonId}`,
+            minutes: 5,
+          }).catch(() => {});
+        }
+      }
       return next;
     });
   };
