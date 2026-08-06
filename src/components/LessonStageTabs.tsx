@@ -4,6 +4,7 @@ import { BookOpen, Code2, PenTool, ClipboardCheck, Rocket, CheckCircle2, Play } 
 import CodeBlock from "@/components/CodeBlock";
 import { useAuth } from "@/hooks/useAuth";
 import { upsertProgress } from "@/lib/progressSync";
+import { logActivity, type ActivityKind } from "@/lib/gamification";
 import Quiz from "@/components/Quiz";
 import PracticeEditor from "@/components/PracticeEditor";
 import { getLessonExtras } from "@/data/lessonExtras";
