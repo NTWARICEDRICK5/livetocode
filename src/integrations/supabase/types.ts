@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          ref_id: string
+          title: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          ref_id: string
+          title: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          ref_id?: string
+          title?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           course_id: string
@@ -44,6 +95,45 @@ export type Database = {
           score?: number
           total?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      learning_activity: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          label: string | null
+          lesson_id: string | null
+          minutes: number
+          score: number | null
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          label?: string | null
+          lesson_id?: string | null
+          minutes?: number
+          score?: number | null
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          label?: string | null
+          lesson_id?: string | null
+          minutes?: number
+          score?: number | null
+          user_id?: string
+          xp?: number
         }
         Relationships: []
       }
@@ -80,30 +170,96 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          content: string
+          course_id: string | null
+          created_at: string
+          id: string
+          lesson_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          country: string | null
           created_at: string
+          daily_goal_minutes: number
           display_name: string | null
           email: string | null
+          full_name: string | null
           id: string
+          learning_goal: string | null
+          preferred_language: string
+          preferred_study_time: string | null
+          skill_level: string
+          time_zone: string | null
           updated_at: string
+          username: string | null
+          weekly_goal_minutes: number
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          country?: string | null
           created_at?: string
+          daily_goal_minutes?: number
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id: string
+          learning_goal?: string | null
+          preferred_language?: string
+          preferred_study_time?: string | null
+          skill_level?: string
+          time_zone?: string | null
           updated_at?: string
+          username?: string | null
+          weekly_goal_minutes?: number
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          country?: string | null
           created_at?: string
+          daily_goal_minutes?: number
           display_name?: string | null
           email?: string | null
+          full_name?: string | null
           id?: string
+          learning_goal?: string | null
+          preferred_language?: string
+          preferred_study_time?: string | null
+          skill_level?: string
+          time_zone?: string | null
           updated_at?: string
+          username?: string | null
+          weekly_goal_minutes?: number
         }
         Relationships: []
       }
