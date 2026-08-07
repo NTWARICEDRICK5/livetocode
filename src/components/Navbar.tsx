@@ -29,8 +29,8 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-lg tracking-tight">
-              <span className="text-gradient-primary">Quad</span>
-              <span className="text-foreground">rant</span>
+              <span className="text-gradient-primary">Code</span>
+              <span className="text-foreground">Learn</span>
             </span>
             <span className="text-[10px] text-muted-foreground/70 font-medium hidden sm:block">
               by NTWARI Cedrick
