@@ -30,8 +30,11 @@ const renderMarkdown = (text: string) => {
       );
     }
     return (
-      <p key={i} className="whitespace-pre-wrap leading-relaxed">
-        {block.replace(/\*\*(.+?)\*\*/g, "$1").replace(/`/g, "")}
+      <p key={i} className="whitespace-pre-wrap leading-relaxed break-words">
+        {block
+          .replace(/^#{1,6}\s*/gm, "")
+          .replace(/\*\*(.+?)\*\*/g, "$1")
+          .replace(/`/g, "")}
       </p>
     );
   });
