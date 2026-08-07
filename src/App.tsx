@@ -16,6 +16,9 @@ import NotesPage from "./pages/Notes";
 import SavedPage from "./pages/Saved";
 import Certify from "./pages/Certify";
 import Verify from "./pages/Verify";
+import Paths from "./pages/Paths";
+import PathDetail from "./pages/PathDetail";
+import TutorChat from "./components/TutorChat";
 import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
@@ -32,6 +35,8 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/course/:courseId" element={<CoursePage />} />
+            <Route path="/paths" element={<Paths />} />
+            <Route path="/paths/:pathId" element={<PathDetail />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -43,6 +48,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <TutorChat />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
