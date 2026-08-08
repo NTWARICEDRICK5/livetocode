@@ -43,17 +43,20 @@ const CoursePage = () => {
   }, [user, course]);
 
   if (!course) {
+    const outline = getCatalogCourse(courseId);
+    if (outline) return <CourseOutline course={outline} />;
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Navbar />
         <div className="text-center mt-20">
           <div className="text-6xl mb-4">😕</div>
           <h1 className="text-3xl font-bold mb-4">Course Not Found</h1>
-          <Link to="/" className="text-primary hover:underline">← Back to Home</Link>
+          <Link to="/courses" className="text-primary hover:underline">← Browse all courses</Link>
         </div>
       </div>
     );
   }
+
 
   const lesson = course.lessons[activeLesson];
 
