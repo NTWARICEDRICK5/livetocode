@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CoursePage from "./pages/CoursePage";
+import Courses from "./pages/Courses";
+
 import Playground from "./pages/Playground";
 import AuthPage from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
