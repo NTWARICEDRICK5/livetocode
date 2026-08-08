@@ -56,8 +56,15 @@ const TutorChat = () => {
   const { pathname, search } = useLocation();
 
   useEffect(() => {
+    const openHandler = () => setOpen(true);
+    window.addEventListener("open-ai-mentor", openHandler);
+    return () => window.removeEventListener("open-ai-mentor", openHandler);
+  }, []);
+
+  useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
+
 
   const send = async (text: string) => {
     const question = text.trim();

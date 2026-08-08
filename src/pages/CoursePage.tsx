@@ -4,8 +4,10 @@ import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LessonStageTabs from "@/components/LessonStageTabs";
-import RelatedCourseCard from "@/components/RelatedCourseCard";
-import { relatedCourses } from "@/data/relatedCourses";
+import RecommendedForYou from "@/components/RecommendedForYou";
+import CourseOutline from "@/components/CourseOutline";
+import { getCatalogCourse } from "@/data/catalog";
+
 import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { pullProgress } from "@/lib/progressSync";
@@ -41,17 +43,20 @@ const CoursePage = () => {
   }, [user, course]);
 
   if (!course) {
+    const outline = getCatalogCourse(courseId);
+    if (outline) return <CourseOutline course={outline} />;
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Navbar />
         <div className="text-center mt-20">
           <div className="text-6xl mb-4">😕</div>
           <h1 className="text-3xl font-bold mb-4">Course Not Found</h1>
-          <Link to="/" className="text-primary hover:underline">← Back to Home</Link>
+          <Link to="/courses" className="text-primary hover:underline">← Browse all courses</Link>
         </div>
       </div>
     );
   }
+
 
   const lesson = course.lessons[activeLesson];
 
@@ -291,28 +296,9 @@ const CoursePage = () => {
               </div>
             </div>
 
-            {/* Related courses */}
-            {(() => {
-              const matches = relatedCourses.filter((r) =>
-                r.related.some((x) => x.toLowerCase() === course.name.toLowerCase() || x === "All")
-              );
-              if (matches.length === 0) return null;
-              return (
-                <div className="mt-12">
-                  <h3 className="text-2xl font-extrabold text-foreground mb-2">
-                    What to Learn <span className="text-gradient-primary">Next</span>
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Technologies and tools that build on top of {course.name}.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {matches.map((c) => (
-                      <RelatedCourseCard key={c.name} course={c} />
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
+            {/* Recommended for you */}
+            <RecommendedForYou currentCourseId={course.id} />
+
           </div>
         </main>
       </div>

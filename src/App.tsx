@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CoursePage from "./pages/CoursePage";
+import Courses from "./pages/Courses";
+
 import Playground from "./pages/Playground";
 import AuthPage from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
@@ -34,7 +36,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/courses" element={<Courses />} />
             <Route path="/course/:courseId" element={<CoursePage />} />
+
             <Route path="/paths" element={<Paths />} />
             <Route path="/paths/:pathId" element={<PathDetail />} />
             <Route path="/playground" element={<Playground />} />
