@@ -4,8 +4,10 @@ import { courses } from "@/data/courses";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LessonStageTabs from "@/components/LessonStageTabs";
-import RelatedCourseCard from "@/components/RelatedCourseCard";
-import { relatedCourses } from "@/data/relatedCourses";
+import RecommendedForYou from "@/components/RecommendedForYou";
+import CourseOutline from "@/components/CourseOutline";
+import { getCatalogCourse } from "@/data/catalog";
+
 import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { pullProgress } from "@/lib/progressSync";
