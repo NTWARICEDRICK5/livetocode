@@ -150,3 +150,19 @@ html {
   .no-print, nav { display: none !important; }
   .print-cert { border: 2px solid #0ea5b7 !important; box-shadow: none !important; }
 }
+
+/* Footer ambient code stream (decorative) */
+@keyframes footer-stream-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.footer-stream {
+  animation: footer-stream-scroll 40s linear infinite;
+}
+.footer-stream-slow {
+  animation-duration: 65s;
+  animation-direction: reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-stream { animation: none; }
+}
