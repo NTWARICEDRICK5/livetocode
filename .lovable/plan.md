@@ -1,76 +1,46 @@
-## Goal
-Transform CodeLearn into a W3Schools-style learning system following the **Explain → Demonstrate → Practice → Test → Apply** cycle, with reference docs, quizzes, certification, and an AI tutor chatbot.
+# CodeLearn — Platform Redesign & Expansion
 
-## Scope
+Delivered in three phases. Each phase ships working, so nothing breaks mid-way.
 
-1. **Restructure all lessons** into the 5-stage cycle
-2. **Reference docs section** for each language (tags/functions/properties)
-3. **Quizzes & exercises** per lesson (MCQ + fill-in-the-blank code)
-4. **Certification mode** (final timed test + shareable certificate)
-5. **AI Tutor chatbot** (Lovable Cloud + AI Gateway)
+## Phase 1 — Catalog, navigation, shell (this turn once approved)
 
-This is large — I'll ship it in **3 phases** so you can review each before the next.
+**Scalable course model**
+- Extend the course type with: `category`, `difficulty`, `prerequisites`, `skills`, `outcomes`, `modules` (module -> lessons), `status` ("full" | "outline"), `estimatedHours`.
+- Keep the existing 7 courses (Python, C, C++, HTML, CSS, JavaScript, TypeScript) exactly as they are, wrapped into modules. No lesson content is lost or rewritten.
+- Add ~45 new catalog entries (Java, C#, Go, Rust, PHP, Ruby, Kotlin, Swift, React, Next.js, Vue, Angular, Tailwind, Node, Django, FastAPI, Laravel, Spring Boot, SQL, PostgreSQL, MySQL, MongoDB, Redis, Git, GitHub, Linux, Networking, Docker, Kubernetes, Cloud, DevOps, Terraform, Data Science, NumPy, Pandas, ML, Deep Learning, Generative AI, LLMs, Cybersecurity, Ethical Hacking, Web Security, Cryptography, SOC, Defensive Security, Algorithms, Data Structures, System Design, Software Engineering) with full metadata, module/lesson outlines and outcomes. Outline lessons render a clear "Lesson content coming soon" state with the module objectives and links to the Playground.
 
----
+**Courses page & navigation**
+- New `/courses` catalog page: search, category filter, difficulty filter, sort, progress badges per card.
+- Navbar split into public and authenticated variants:
+  - Public: Home, Courses, Learning Paths, Projects, Playground, AI Mentor, Sign In, Get Started.
+  - Signed in: Dashboard, Courses, Paths, Projects, Playground, AI Mentor, Progress, Profile menu.
+- Global search dialog (Cmd/Ctrl+K) across courses, lessons, paths, projects.
 
-## Phase 1 — Foundation + Lesson Cycle + Quizzes
+**Recommended for You**
+- Replace `relatedCourses.ts` usage with a recommendation engine scoring real catalog courses by current course, completed lessons, skill level, active path, prerequisites and progress. Used on course pages and the dashboard.
 
-**New lesson data shape** (`src/data/courses.ts` extended)
-Each lesson gets:
-```
-{ explain, demo (code+output), practice (starter+solution), quiz[], apply (challenge) }
-```
-Existing content moves into `explain` + `demo` so nothing is lost.
+**Footer + UI polish**
+- New developer-themed footer: Courses / Paths / Playground / Projects / AI Mentor / Dashboard, technologies, resources, socials, copyright, and the NTWARI Cedrick credit preserved.
+- Subtle animated terminal line, drifting `</>` glyphs and a faint binary stream — all disabled under `prefers-reduced-motion`.
+- Premium pass on tokens: refined dark surfaces, cyan/electric-blue accents, elevation scale, spacing and typography rhythm. All via semantic tokens in `index.css` / `tailwind.config.ts`.
 
-**New components**
-- `LessonStageTabs.tsx` — tabbed UI: Explain · Demonstrate · Practice · Test · Apply
-- `Quiz.tsx` — MCQ runner with score, instant feedback, retry
-- `PracticeEditor.tsx` — small inline editor (reuses Playground engine: HTML/CSS/JS iframe + Piston for Py/C/C++/JS) with "Check solution" button
-- `ApplyChallenge.tsx` — open-ended challenge that opens in full Playground with starter code
-- `LessonProgress.tsx` — per-stage completion checklist
+## Phase 2 — Playground IDE
 
-**CoursePage.tsx** — replaces current single-content view with `LessonStageTabs`. Mark Complete only enables when all stages done.
+- Standalone `/playground`, removed from the lesson flow (lessons keep their inline practice editor and get an "Open in Playground" hand-off).
+- Monaco Editor, lazy-loaded so it never affects other routes: syntax highlighting, autocomplete, formatting, multi-file tabs, themes matched to the design system.
+- Run / Stop / Reset, output console with stdout, compile errors, runtime errors, execution time, and click-to-jump line-specific error markers.
+- Save/load projects to the database per user, plus share links.
+- Execution stays server-side in the sandboxed edge function (never in the app server): timeouts, output-size caps, code-length limits and per-user throttling on top of the isolated remote compiler.
 
-**Progress storage** — `localStorage` key `codelearn_progress_v2` (per-course → per-lesson → per-stage).
+## Phase 3 — Projects, paths, dashboard, AI Mentor
 
----
+- **Projects**: `/projects` catalog and `/projects/:id` detail with difficulty, tech stack, estimated time, skills, prerequisites, step instructions, progress and completion — stored per user.
+- **Learning paths**: expand to Software Engineer, Full-Stack, AI Engineer, Cybersecurity, Cloud, DevOps, Data Scientist, each staged beginner → intermediate → advanced → projects, wired to the new catalog.
+- **Dashboard redesign**: Continue Learning, daily goal, weekly progress, streak, course progress, skill progress, recommended courses, projects, recent activity, learning stats, AI Mentor entry — laid out to answer "what should I learn or build next?".
+- **AI Mentor upgrade**: mode selector (Explain, Hint, Debug, Review, Improve, Quiz Me, Practice, Mentor); context payload includes course, lesson, exercise, current editor code, last error, progress and skill level; system prompt tuned to teach rather than hand over answers. Handles 429/402 gateway errors with clear messages.
 
-## Phase 2 — Reference Docs + Certification
+## Technical notes
 
-**Reference section** (`/reference/:lang`)
-- New `src/data/references.ts` — list of items per language (HTML tags, CSS properties, JS methods, Python builtins, C/C++ keywords) with: name, syntax, description, example, browser/version notes
-- `ReferencePage.tsx` — searchable, filterable sidebar list + detail pane with live "Try it" mini editor
-- Navbar gets **Reference** dropdown
-
-**Certification**
-- `/certify/:courseId` — timed test (20 questions, 20 min), draws from lesson quizzes + extra cert-only items
-- Pass ≥70% → generates certificate
-- `Certificate.tsx` — printable/downloadable PDF-style certificate with learner name, course, date, score, unique ID, signed by NTWARI Cedrick
-- Stored in DB so it has a verifiable shareable URL `/verify/:certId`
-
----
-
-## Phase 3 — AI Tutor (Lovable Cloud + AI Gateway)
-
-- Enable **Lovable Cloud** (DB for progress sync, certificates, auth) + **AI Gateway**
-- Edge function `chat-tutor` — streaming SSE, system prompt enforces the Explain→Demo→Practice→Test→Apply teaching cycle and current lesson context
-- Floating `TutorChat.tsx` button on every page; opens drawer with markdown rendering, language-aware code blocks, "Insert into editor" action on lesson/playground pages
-- Auth: email/password + Google sign-in, so progress and certs persist across devices
-
----
-
-## Technical details
-
-- New tables (Phase 3): `profiles`, `user_roles`, `lesson_progress`, `quiz_attempts`, `certificates`, `tutor_conversations`, `tutor_messages` — all RLS-protected, roles in separate table per security best practice
-- Quiz/reference content authored in TS data files (no DB needed for content itself)
-- All new UI uses existing semantic tokens (cyan accents, glassmorphism cards) — no design drift
-- Practice/Apply editors reuse the existing Piston + iframe engine from Playground
-- Certificate PDF rendered client-side via `html2canvas` + `jspdf` (or print stylesheet fallback)
-
----
-
-## What I'll deliver in this turn
-
-**Phase 1 only.** It's already substantial (data model migration + 5-stage lesson UI + quizzes for every lesson). After you confirm Phase 1 looks good, I'll do Phase 2, then Phase 3.
-
-Reply **"go"** to start Phase 1, or tell me to reorder/drop anything.
+- New DB tables in Phase 2/3: `playground_projects`, `project_progress` — RLS scoped to `auth.uid()` with explicit grants.
+- Existing tables, auth, progress sync, gamification, certificates and notes are preserved and reused; work is refactor-first, not a rewrite.
+- Route-level code splitting for Playground and Monaco; catalog data split by category so the bundle stays reasonable.
