@@ -317,30 +317,9 @@ const Playground = () => {
   };
 
   const insertSnippet = (snippet: string) => {
-    const ta = taRef.current;
-    if (!ta) {
-      setCode((c) => c + "\n" + snippet);
-      return;
-    }
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const next = code.slice(0, start) + snippet + code.slice(end);
-    setCode(next);
-    requestAnimationFrame(() => {
-      ta.focus();
-      const pos = start + snippet.length;
-      ta.selectionStart = ta.selectionEnd = pos;
-    });
+    setCode((c) => (c.endsWith("\n") ? c + snippet : c + "\n" + snippet));
   };
 
-  const updateCursor = () => {
-    const ta = taRef.current;
-    if (!ta) return;
-    const pos = ta.selectionStart;
-    const before = ta.value.slice(0, pos);
-    const lines = before.split("\n");
-    setCursor({ line: lines.length, col: lines[lines.length - 1].length + 1 });
-  };
 
   const bestForActive = runs.find((r) => r.langId === active.id && r.best);
   const snippets = SNIPPETS[active.id] ?? [];
@@ -445,6 +424,14 @@ const Playground = () => {
                     {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                     {running ? "Running…" : "Run"}
                   </button>
+                  <button
+                    onClick={handleStop}
+                    disabled={!running}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-destructive/40 bg-destructive/10 text-sm text-destructive hover:border-destructive disabled:opacity-40"
+                  >
+                    <Square className="w-3.5 h-3.5" /> Stop
+                  </button>
+
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -508,40 +495,17 @@ const Playground = () => {
                 {/* Editor + Output split */}
                 <div className="grid lg:grid-cols-2 flex-1 min-h-[460px]">
                   {/* Editor */}
-                  <div className="flex bg-[hsl(220_25%_5%)] border-r border-border/40">
-                    <div
-                      className="select-none text-right py-3 px-2 font-mono text-[11px] text-muted-foreground/60 bg-[hsl(220_25%_4%)] border-r border-border/30 leading-[1.55]"
-                      aria-hidden
-                    >
-                      {Array.from({ length: lineCount }).map((_, i) => (
-                        <div key={i}>{i + 1}</div>
-                      ))}
-                    </div>
-                    <textarea
-                      ref={taRef}
+                  <div className="flex flex-col bg-[hsl(220_25%_5%)] border-r border-border/40 min-h-[460px]">
+                    <CodeEditor
                       value={code}
-                      onChange={(e) => { setCode(e.target.value); updateCursor(); }}
-                      onKeyUp={updateCursor}
-                      onClick={updateCursor}
-                      spellCheck={false}
-                      className="flex-1 bg-transparent text-foreground font-mono text-[13px] leading-[1.55] p-3 outline-none resize-none min-h-[460px]"
-                      onKeyDown={(e) => {
-                        if (e.key === "Tab") {
-                          e.preventDefault();
-                          const ta = e.currentTarget;
-                          const s = ta.selectionStart;
-                          const v = ta.value;
-                          const next = v.slice(0, s) + "  " + v.slice(ta.selectionEnd);
-                          setCode(next);
-                          requestAnimationFrame(() => { ta.selectionStart = ta.selectionEnd = s + 2; });
-                        }
-                        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-                          e.preventDefault();
-                          handleRun();
-                        }
-                      }}
+                      language={active.monaco}
+                      onChange={setCode}
+                      onRun={handleRun}
+                      onCursorChange={setCursor}
+                      height="100%"
                     />
                   </div>
+
 
                   {/* Output / Preview */}
                   <div className="flex flex-col bg-[hsl(220_25%_3%)]">
