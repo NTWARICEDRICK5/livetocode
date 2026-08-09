@@ -484,11 +484,12 @@ const Playground = () => {
                   )}
                   <div className="ml-auto" />
                   <button
-                    onClick={() => { setCode(active.starter); setOutput(""); setIframeSrc(""); }}
-                    className="text-xs text-muted-foreground hover:text-foreground underline"
+                    onClick={() => { handleStop(); setCode(active.starter); setOutput(""); setIframeSrc(""); }}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-secondary/40 text-sm hover:border-primary/50"
                   >
-                    Reset
+                    <RotateCcw className="w-3.5 h-3.5" /> Reset
                   </button>
+
                 </div>
 
                 {/* Editor + Output split */}
