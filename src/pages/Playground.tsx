@@ -147,7 +147,6 @@ const Playground = () => {
   const [runs, setRuns] = useState<SavedRun[]>(loadRuns);
   const [iframeSrc, setIframeSrc] = useState<string>("");
   const [cursor, setCursor] = useState<{ line: number; col: number }>({ line: 1, col: 1 });
-  const taRef = useRef<HTMLTextAreaElement>(null);
   const browserRunRef = useRef<BrowserRunHandle | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
