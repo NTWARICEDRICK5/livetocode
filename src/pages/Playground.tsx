@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code2, Plus, X } from "lucide-react";
+import { Play, Square, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code2, Plus, X, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
+import { runJsSandboxed, type BrowserRunHandle } from "@/lib/browserRunner";
+import CodeEditor from "@/components/CodeEditor";
 import { SNIPPETS } from "@/data/playgroundSnippets";
 import { transform } from "sucrase";
 import {
@@ -24,7 +26,9 @@ interface PlaygroundLang {
   filename: string;
   starter: string;
   runner: RunnerKind;
+  monaco: string;
 }
+
 
 const LANGS: PlaygroundLang[] = [
   {
