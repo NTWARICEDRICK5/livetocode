@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Play, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code2, Plus, X } from "lucide-react";
+import { Play, Square, Sparkles, Save, Share2, Trash2, Star, Loader2, Check, Files, Code2, Plus, X, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { runRemoteCode, type RemoteCodeLanguage } from "@/lib/codeRunner";
+import { runJsSandboxed, type BrowserRunHandle } from "@/lib/browserRunner";
+import CodeEditor from "@/components/CodeEditor";
 import { SNIPPETS } from "@/data/playgroundSnippets";
 import { transform } from "sucrase";
 import {
@@ -24,11 +26,14 @@ interface PlaygroundLang {
   filename: string;
   starter: string;
   runner: RunnerKind;
+  monaco: string;
 }
+
 
 const LANGS: PlaygroundLang[] = [
   {
     id: "python",
+    monaco: "python",
     label: "Python",
     icon: "🐍",
     filename: "main.py",
@@ -37,6 +42,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "c",
+    monaco: "c",
     label: "C",
     icon: "⚙️",
     filename: "main.c",
@@ -45,6 +51,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "cpp",
+    monaco: "cpp",
     label: "C++",
     icon: "⚡",
     filename: "main.cpp",
@@ -53,6 +60,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "javascript",
+    monaco: "javascript",
     label: "JavaScript",
     icon: "✨",
     filename: "script.js",
@@ -61,6 +69,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "html",
+    monaco: "html",
     label: "HTML",
     icon: "🌐",
     filename: "index.html",
@@ -69,6 +78,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "css",
+    monaco: "css",
     label: "CSS",
     icon: "🎨",
     filename: "styles.css",
@@ -77,6 +87,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "webdemo",
+    monaco: "html",
     label: "Web Demo",
     icon: "🧪",
     filename: "demo.html",
@@ -85,6 +96,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "typescript",
+    monaco: "typescript",
     label: "TypeScript",
     icon: "🟦",
     filename: "main.ts",
@@ -135,7 +147,8 @@ const Playground = () => {
   const [runs, setRuns] = useState<SavedRun[]>(loadRuns);
   const [iframeSrc, setIframeSrc] = useState<string>("");
   const [cursor, setCursor] = useState<{ line: number; col: number }>({ line: 1, col: 1 });
-  const taRef = useRef<HTMLTextAreaElement>(null);
+  const browserRunRef = useRef<BrowserRunHandle | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -186,32 +199,20 @@ const Playground = () => {
     return code;
   };
 
-  const runJsInBrowser = (src: string): string => {
-    const logs: string[] = [];
-    const fmt = (a: any) => {
-      if (typeof a === "string") return a;
-      try { return JSON.stringify(a); } catch { return String(a); }
-    };
-    const sandbox = {
-      log: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
-      error: (...args: any[]) => logs.push("[error] " + args.map(fmt).join(" ")),
-      warn: (...args: any[]) => logs.push("[warn] " + args.map(fmt).join(" ")),
-      info: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
-    };
-    try {
-      // eslint-disable-next-line no-new-func
-      const fn = new Function("console", `"use strict";\n${src}`);
-      const result = fn(sandbox);
-      if (result !== undefined) logs.push(fmt(result));
-    } catch (e: any) {
-      logs.push("Error: " + (e?.message ?? String(e)));
-    }
-    return logs.join("\n") || "(no output)";
+  const handleStop = () => {
+    browserRunRef.current?.stop();
+    browserRunRef.current = null;
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setRunning(false);
+    setOutput((o) => (o ? o + "\n\n■ Stopped." : "■ Stopped."));
   };
 
   const handleRun = async () => {
+    if (running) return;
     setRunning(true);
     setOutput("");
+    const startedAt = performance.now();
     try {
       if (active.runner === "iframe") {
         const doc = buildIframeDoc();
@@ -219,29 +220,39 @@ const Playground = () => {
         const url = URL.createObjectURL(blob);
         setIframeSrc(url);
         setOutput("✓ Rendered in preview");
-      } else if (active.runner === "browser-js") {
-        setOutput(runJsInBrowser(code));
-      } else if (active.runner === "browser-ts") {
+      } else if (active.runner === "browser-js" || active.runner === "browser-ts") {
         let js = code;
-        try {
-          js = transform(code, { transforms: ["typescript", "imports"] }).code;
-        } catch (e: any) {
-          setOutput("TypeScript error: " + (e?.message ?? String(e)));
-          setRunning(false);
-          return;
+        if (active.runner === "browser-ts") {
+          try {
+            js = transform(code, { transforms: ["typescript", "imports"] }).code;
+          } catch (e: any) {
+            setOutput("TypeScript error: " + (e?.message ?? String(e)));
+            return;
+          }
         }
-        setOutput(runJsInBrowser(js));
+        const handle = runJsSandboxed(js);
+        browserRunRef.current = handle;
+        const out = await handle.promise;
+        browserRunRef.current = null;
+        setOutput(`${out}\n\n— finished in ${Math.round(performance.now() - startedAt)}ms`);
       } else {
-        const result = await runRemoteCode(active.id as RemoteCodeLanguage, code);
-        setOutput(result.output || "(no output)");
+        const controller = new AbortController();
+        abortRef.current = controller;
+        const result = await runRemoteCode(active.id as RemoteCodeLanguage, code, controller.signal);
+        abortRef.current = null;
+        setOutput(
+          `${result.output || "(no output)"}\n\n— ${result.cached ? "cached result" : `finished in ${result.ms ?? Math.round(performance.now() - startedAt)}ms`}`,
+        );
       }
     } catch (e: any) {
+      if (e?.name === "AbortError") return;
       setOutput("Error: " + (e?.message ?? "Failed to run"));
       toast.error("Run failed");
     } finally {
       setRunning(false);
     }
   };
+
 
   const handleSave = (best = false) => {
     const run: SavedRun = {
@@ -305,30 +316,9 @@ const Playground = () => {
   };
 
   const insertSnippet = (snippet: string) => {
-    const ta = taRef.current;
-    if (!ta) {
-      setCode((c) => c + "\n" + snippet);
-      return;
-    }
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const next = code.slice(0, start) + snippet + code.slice(end);
-    setCode(next);
-    requestAnimationFrame(() => {
-      ta.focus();
-      const pos = start + snippet.length;
-      ta.selectionStart = ta.selectionEnd = pos;
-    });
+    setCode((c) => (c.endsWith("\n") ? c + snippet : c + "\n" + snippet));
   };
 
-  const updateCursor = () => {
-    const ta = taRef.current;
-    if (!ta) return;
-    const pos = ta.selectionStart;
-    const before = ta.value.slice(0, pos);
-    const lines = before.split("\n");
-    setCursor({ line: lines.length, col: lines[lines.length - 1].length + 1 });
-  };
 
   const bestForActive = runs.find((r) => r.langId === active.id && r.best);
   const snippets = SNIPPETS[active.id] ?? [];
@@ -433,6 +423,14 @@ const Playground = () => {
                     {running ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                     {running ? "Running…" : "Run"}
                   </button>
+                  <button
+                    onClick={handleStop}
+                    disabled={!running}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-destructive/40 bg-destructive/10 text-sm text-destructive hover:border-destructive disabled:opacity-40"
+                  >
+                    <Square className="w-3.5 h-3.5" /> Stop
+                  </button>
+
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -486,50 +484,28 @@ const Playground = () => {
                   )}
                   <div className="ml-auto" />
                   <button
-                    onClick={() => { setCode(active.starter); setOutput(""); setIframeSrc(""); }}
-                    className="text-xs text-muted-foreground hover:text-foreground underline"
+                    onClick={() => { handleStop(); setCode(active.starter); setOutput(""); setIframeSrc(""); }}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-secondary/40 text-sm hover:border-primary/50"
                   >
-                    Reset
+                    <RotateCcw className="w-3.5 h-3.5" /> Reset
                   </button>
+
                 </div>
 
                 {/* Editor + Output split */}
                 <div className="grid lg:grid-cols-2 flex-1 min-h-[460px]">
                   {/* Editor */}
-                  <div className="flex bg-[hsl(220_25%_5%)] border-r border-border/40">
-                    <div
-                      className="select-none text-right py-3 px-2 font-mono text-[11px] text-muted-foreground/60 bg-[hsl(220_25%_4%)] border-r border-border/30 leading-[1.55]"
-                      aria-hidden
-                    >
-                      {Array.from({ length: lineCount }).map((_, i) => (
-                        <div key={i}>{i + 1}</div>
-                      ))}
-                    </div>
-                    <textarea
-                      ref={taRef}
+                  <div className="flex flex-col bg-[hsl(220_25%_5%)] border-r border-border/40 min-h-[460px]">
+                    <CodeEditor
                       value={code}
-                      onChange={(e) => { setCode(e.target.value); updateCursor(); }}
-                      onKeyUp={updateCursor}
-                      onClick={updateCursor}
-                      spellCheck={false}
-                      className="flex-1 bg-transparent text-foreground font-mono text-[13px] leading-[1.55] p-3 outline-none resize-none min-h-[460px]"
-                      onKeyDown={(e) => {
-                        if (e.key === "Tab") {
-                          e.preventDefault();
-                          const ta = e.currentTarget;
-                          const s = ta.selectionStart;
-                          const v = ta.value;
-                          const next = v.slice(0, s) + "  " + v.slice(ta.selectionEnd);
-                          setCode(next);
-                          requestAnimationFrame(() => { ta.selectionStart = ta.selectionEnd = s + 2; });
-                        }
-                        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-                          e.preventDefault();
-                          handleRun();
-                        }
-                      }}
+                      language={active.monaco}
+                      onChange={setCode}
+                      onRun={handleRun}
+                      onCursorChange={setCursor}
+                      height="100%"
                     />
                   </div>
+
 
                   {/* Output / Preview */}
                   <div className="flex flex-col bg-[hsl(220_25%_3%)]">
