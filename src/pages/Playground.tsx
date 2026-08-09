@@ -198,32 +198,20 @@ const Playground = () => {
     return code;
   };
 
-  const runJsInBrowser = (src: string): string => {
-    const logs: string[] = [];
-    const fmt = (a: any) => {
-      if (typeof a === "string") return a;
-      try { return JSON.stringify(a); } catch { return String(a); }
-    };
-    const sandbox = {
-      log: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
-      error: (...args: any[]) => logs.push("[error] " + args.map(fmt).join(" ")),
-      warn: (...args: any[]) => logs.push("[warn] " + args.map(fmt).join(" ")),
-      info: (...args: any[]) => logs.push(args.map(fmt).join(" ")),
-    };
-    try {
-      // eslint-disable-next-line no-new-func
-      const fn = new Function("console", `"use strict";\n${src}`);
-      const result = fn(sandbox);
-      if (result !== undefined) logs.push(fmt(result));
-    } catch (e: any) {
-      logs.push("Error: " + (e?.message ?? String(e)));
-    }
-    return logs.join("\n") || "(no output)";
+  const handleStop = () => {
+    browserRunRef.current?.stop();
+    browserRunRef.current = null;
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setRunning(false);
+    setOutput((o) => (o ? o + "\n\n■ Stopped." : "■ Stopped."));
   };
 
   const handleRun = async () => {
+    if (running) return;
     setRunning(true);
     setOutput("");
+    const startedAt = performance.now();
     try {
       if (active.runner === "iframe") {
         const doc = buildIframeDoc();
@@ -231,29 +219,39 @@ const Playground = () => {
         const url = URL.createObjectURL(blob);
         setIframeSrc(url);
         setOutput("✓ Rendered in preview");
-      } else if (active.runner === "browser-js") {
-        setOutput(runJsInBrowser(code));
-      } else if (active.runner === "browser-ts") {
+      } else if (active.runner === "browser-js" || active.runner === "browser-ts") {
         let js = code;
-        try {
-          js = transform(code, { transforms: ["typescript", "imports"] }).code;
-        } catch (e: any) {
-          setOutput("TypeScript error: " + (e?.message ?? String(e)));
-          setRunning(false);
-          return;
+        if (active.runner === "browser-ts") {
+          try {
+            js = transform(code, { transforms: ["typescript", "imports"] }).code;
+          } catch (e: any) {
+            setOutput("TypeScript error: " + (e?.message ?? String(e)));
+            return;
+          }
         }
-        setOutput(runJsInBrowser(js));
+        const handle = runJsSandboxed(js);
+        browserRunRef.current = handle;
+        const out = await handle.promise;
+        browserRunRef.current = null;
+        setOutput(`${out}\n\n— finished in ${Math.round(performance.now() - startedAt)}ms`);
       } else {
-        const result = await runRemoteCode(active.id as RemoteCodeLanguage, code);
-        setOutput(result.output || "(no output)");
+        const controller = new AbortController();
+        abortRef.current = controller;
+        const result = await runRemoteCode(active.id as RemoteCodeLanguage, code, controller.signal);
+        abortRef.current = null;
+        setOutput(
+          `${result.output || "(no output)"}\n\n— ${result.cached ? "cached result" : `finished in ${result.ms ?? Math.round(performance.now() - startedAt)}ms`}`,
+        );
       }
     } catch (e: any) {
+      if (e?.name === "AbortError") return;
       setOutput("Error: " + (e?.message ?? "Failed to run"));
       toast.error("Run failed");
     } finally {
       setRunning(false);
     }
   };
+
 
   const handleSave = (best = false) => {
     const run: SavedRun = {
