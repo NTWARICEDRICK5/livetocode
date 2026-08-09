@@ -33,6 +33,7 @@ interface PlaygroundLang {
 const LANGS: PlaygroundLang[] = [
   {
     id: "python",
+    monaco: "python",
     label: "Python",
     icon: "🐍",
     filename: "main.py",
@@ -41,6 +42,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "c",
+    monaco: "c",
     label: "C",
     icon: "⚙️",
     filename: "main.c",
@@ -49,6 +51,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "cpp",
+    monaco: "cpp",
     label: "C++",
     icon: "⚡",
     filename: "main.cpp",
@@ -57,6 +60,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "javascript",
+    monaco: "javascript",
     label: "JavaScript",
     icon: "✨",
     filename: "script.js",
@@ -65,6 +69,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "html",
+    monaco: "html",
     label: "HTML",
     icon: "🌐",
     filename: "index.html",
@@ -73,6 +78,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "css",
+    monaco: "css",
     label: "CSS",
     icon: "🎨",
     filename: "styles.css",
@@ -81,6 +87,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "webdemo",
+    monaco: "html",
     label: "Web Demo",
     icon: "🧪",
     filename: "demo.html",
@@ -89,6 +96,7 @@ const LANGS: PlaygroundLang[] = [
   },
   {
     id: "typescript",
+    monaco: "typescript",
     label: "TypeScript",
     icon: "🟦",
     filename: "main.ts",
