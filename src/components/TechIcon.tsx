@@ -1,11 +1,11 @@
 import type { ComponentType, CSSProperties } from "react";
 import {
-  SiPython, SiC, SiCplusplus, SiHtml5, SiCss3, SiJavascript, SiTypescript,
+  SiPython, SiC, SiCplusplus, SiHtml5, SiCss, SiJavascript, SiTypescript,
   SiOpenjdk, SiDotnet, SiGo, SiRust, SiPhp, SiRuby, SiKotlin, SiSwift,
   SiReact, SiNextdotjs, SiVuedotjs, SiAngular, SiTailwindcss, SiNodedotjs,
   SiDjango, SiFastapi, SiLaravel, SiSpringboot, SiPostgresql, SiMysql,
   SiMongodb, SiRedis, SiGit, SiGithub, SiLinux, SiDocker, SiKubernetes,
-  SiTerraform, SiNumpy, SiPandas, SiScikitlearn, SiPytorch, SiOpenai,
+  SiTerraform, SiNumpy, SiPandas, SiScikitlearn, SiPytorch, 
   SiGraphql, SiFlutter, SiFirebase, SiSass, SiVite, SiSupabase,
 } from "react-icons/si";
 import {
@@ -22,7 +22,7 @@ const MAP: Record<string, IconDef> = {
   cpp: { Icon: SiCplusplus, color: "#00599C" },
   "c++": { Icon: SiCplusplus, color: "#00599C" },
   html: { Icon: SiHtml5, color: "#E34F26" },
-  css: { Icon: SiCss3, color: "#1572B6" },
+  css: { Icon: SiCss, color: "#1572B6" },
   javascript: { Icon: SiJavascript, color: "#F7DF1E" },
   js: { Icon: SiJavascript, color: "#F7DF1E" },
   typescript: { Icon: SiTypescript, color: "#3178C6" },
@@ -72,7 +72,7 @@ const MAP: Record<string, IconDef> = {
   pandas: { Icon: SiPandas, color: "#E0E0E0" },
   "machine-learning": { Icon: SiScikitlearn, color: "#F7931E" },
   "deep-learning": { Icon: SiPytorch, color: "#EE4C2C" },
-  "generative-ai": { Icon: SiOpenai, color: "#10A37F" },
+  "generative-ai": { Icon:  color: "#10A37F" },
   llms: { Icon: BookOpen, color: "#C084FC" },
   cybersecurity: { Icon: Shield, color: "#F87171" },
   "ethical-hacking": { Icon: Search, color: "#FB923C" },
