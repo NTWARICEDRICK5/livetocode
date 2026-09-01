@@ -1,3 +1,4 @@
+import AchievementIcon from "@/components/AchievementIcon";
 import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -278,7 +279,7 @@ const Dashboard = () => {
                     unlocked ? "border-primary/40" : "opacity-40 grayscale"
                   }`}
                 >
-                  <div className="text-3xl mb-2">{a.icon}</div>
+                  <div className="flex justify-center mb-2 text-primary"><AchievementIcon name={a.icon} className="w-7 h-7" /></div>
                   <div className="text-xs font-bold">{a.title}</div>
                   <div className="text-[10px] text-muted-foreground mt-1">
                     {unlocked ? "Unlocked" : "Locked"}
