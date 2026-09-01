@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import { BookOpen, Clock, ChevronRight } from "lucide-react";
 
@@ -5,7 +6,7 @@ interface CourseCardProps {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  icon?: string;
   color: string;
   lessons: number;
   duration: string;
@@ -23,7 +24,7 @@ const CourseCard = ({ id, name, description, icon, color, lessons, duration, lev
             className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg transition-transform duration-300 group-hover:scale-110"
             style={{ background: color, boxShadow: `0 4px 20px ${color}40` }}
           >
-            {icon}
+            <TechIcon name={id} className="w-8 h-8" colored={false} />
           </div>
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
             level === 'Beginner' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :

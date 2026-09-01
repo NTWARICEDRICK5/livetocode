@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Link } from "react-router-dom";
 import { courses } from "@/data/courses";
@@ -6,7 +7,7 @@ import CourseCard from "@/components/CourseCard";
 import RelatedCourseCard from "@/components/RelatedCourseCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass } from "lucide-react";
+import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass, Target } from "lucide-react";
 
 const stats = [
   { label: "Programming Languages", value: "6", icon: Code2 },
@@ -78,7 +79,7 @@ const Index = () => {
               }}
               className="px-8 py-4 bg-gradient-primary text-primary-foreground rounded-xl font-bold text-lg hover:opacity-90 transition-all glow-cyan hover:scale-105"
             >
-              🚀 Start Learning Free
+              Start Learning Free
             </Link>
             <Link
               to="/course/python"
@@ -96,7 +97,7 @@ const Index = () => {
                 to={`/course/${c.id}`}
                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border hover:border-primary/50 hover:bg-secondary transition-all text-sm font-medium"
               >
-                <span>{c.icon}</span>
+                <TechIcon name={c.id} className="w-4 h-4" />
                 <span className="text-muted-foreground">{c.name}</span>
               </Link>
             ))}
@@ -198,27 +199,27 @@ const Index = () => {
 
           <div className="flex flex-wrap justify-center items-center gap-2 max-w-4xl mx-auto">
             {[
-              { name: "HTML", icon: "🌐", color: "text-orange-400" },
+              { name: "HTML", id: "html", color: "text-orange-400" },
               { arrow: true },
-              { name: "CSS", icon: "🎨", color: "text-blue-400" },
+              { name: "CSS", id: "css", color: "text-blue-400" },
               { arrow: true },
-              { name: "JavaScript", icon: "✨", color: "text-yellow-400" },
+              { name: "JavaScript", id: "javascript", color: "text-yellow-400" },
               { arrow: true },
-              { name: "Python", icon: "🐍", color: "text-green-400" },
+              { name: "Python", id: "python", color: "text-green-400" },
               { arrow: true },
-              { name: "C", icon: "⚙️", color: "text-slate-400" },
+              { name: "C", id: "c", color: "text-slate-400" },
               { arrow: true },
-              { name: "C++", icon: "⚡", color: "text-cyan-400" },
+              { name: "C++", id: "cpp", color: "text-cyan-400" },
             ].map((item, i) =>
               "arrow" in item ? (
                 <span key={i} className="text-muted-foreground text-xl font-bold">→</span>
               ) : (
                 <Link
                   key={item.name}
-                  to={`/course/${item.name?.toLowerCase()}`}
+                  to={`/course/${item.id}`}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl card-glass hover:border-primary/50 transition-all hover:-translate-y-1 w-24"
                 >
-                  <span className="text-2xl">{item.icon}</span>
+                  <TechIcon name={item.id!} className="w-7 h-7" />
                   <span className={`text-xs font-bold ${item.color}`}>{item.name}</span>
                 </Link>
               )
@@ -252,7 +253,7 @@ const Index = () => {
       {/* CTA Footer */}
       <section className="py-24 container mx-auto px-4 text-center">
         <div className="max-w-2xl mx-auto card-glass rounded-3xl p-12">
-          <div className="text-5xl mb-6">🎯</div>
+          <Target className="w-12 h-12 mx-auto mb-6 text-primary" />
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
             Ready to <span className="text-gradient-primary">Start Coding?</span>
           </h2>
@@ -263,7 +264,7 @@ const Index = () => {
             to="/course/python"
             className="inline-block px-8 py-4 bg-gradient-primary text-primary-foreground rounded-xl font-bold text-lg hover:opacity-90 transition-all glow-cyan hover:scale-105"
           >
-            Start with Python — It's the Easiest! 🐍
+            Start with Python — It's the Easiest!
           </Link>
         </div>
       </section>

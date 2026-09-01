@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -74,7 +75,7 @@ const LANGS: PlaygroundLang[] = [
     icon: "🌐",
     filename: "index.html",
     runner: "iframe",
-    starter: `<!doctype html>\n<html>\n  <head><title>My Page</title></head>\n  <body style="font-family:sans-serif;padding:24px;background:#0f172a;color:#e2e8f0">\n    <h1>Hello from HTML 👋</h1>\n    <p>Edit this code and click <b>Run</b>.</p>\n  </body>\n</html>\n`,
+    starter: `<!doctype html>\n<html>\n  <head><title>My Page</title></head>\n  <body style="font-family:sans-serif;padding:24px;background:#0f172a;color:#e2e8f0">\n    <h1>Hello from HTML</h1>\n    <p>Edit this code and click <b>Run</b>.</p>\n  </body>\n</html>\n`,
   },
   {
     id: "css",
@@ -219,7 +220,7 @@ const Playground = () => {
         const blob = new Blob([doc], { type: "text/html" });
         const url = URL.createObjectURL(blob);
         setIframeSrc(url);
-        setOutput("✓ Rendered in preview");
+        setOutput("Rendered in preview");
       } else if (active.runner === "browser-js" || active.runner === "browser-ts") {
         let js = code;
         if (active.runner === "browser-ts") {
@@ -272,7 +273,7 @@ const Playground = () => {
     next = next.slice(0, 50);
     setRuns(next);
     saveRuns(next);
-    toast.success(best ? "Saved as your best solution ⭐" : "Run saved");
+    toast.success(best ? "Saved as your best solution" : "Run saved");
   };
 
   const handleDelete = (id: string) => {
@@ -372,7 +373,7 @@ const Playground = () => {
                               : "text-muted-foreground hover:bg-secondary/40 hover:text-foreground"
                           }`}
                         >
-                          <span className="text-base">{l.icon}</span>
+                          <TechIcon name={l.id === "webdemo" ? "html" : l.id} className="w-4 h-4" />
                           <span className="truncate">{l.filename}</span>
                         </button>
                       </li>
@@ -399,7 +400,7 @@ const Playground = () => {
                         }`}
                         onClick={() => switchLang(l)}
                       >
-                        <span>{l.icon}</span>
+                        <TechIcon name={l.id === "webdemo" ? "html" : l.id} className="w-4 h-4" />
                         <span className="font-mono">{l.filename}</span>
                         <button
                           onClick={(e) => { e.stopPropagation(); closeTab(id); }}
@@ -620,7 +621,7 @@ const Playground = () => {
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-8">
-            💡 Tip: press <kbd className="px-1.5 py-0.5 rounded border border-border bg-secondary/40">Ctrl/⌘ + Enter</kbd> to run code.
+            Tip: press <kbd className="px-1.5 py-0.5 rounded border border-border bg-secondary/40">Ctrl/⌘ + Enter</kbd> to run code.
           </p>
         </div>
       </main>

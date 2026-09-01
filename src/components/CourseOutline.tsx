@@ -1,10 +1,11 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RecommendedForYou from "@/components/RecommendedForYou";
 import type { CatalogCourse } from "@/data/catalog";
 import { lessonCount } from "@/data/catalog";
-import { Clock, Layers, Target, ListChecks, Terminal, ArrowLeft } from "lucide-react";
+import { Clock, Layers, Target, ListChecks, Terminal, ArrowLeft, Check } from "lucide-react";
 
 const CourseOutline = ({ course }: { course: CatalogCourse }) => (
   <div className="min-h-screen bg-background">
@@ -16,7 +17,7 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => (
 
       <header className="mb-10">
         <div className="flex items-center gap-4 mb-4">
-          <span className="text-5xl" aria-hidden>{course.icon}</span>
+          <span className="w-16 h-16 rounded-2xl bg-secondary/60 border border-border flex items-center justify-center"><TechIcon name={course.id} className="w-9 h-9" /></span>
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight">{course.name}</h1>
             <p className="text-sm text-muted-foreground">{course.category}</p>
@@ -60,7 +61,7 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => (
             <h3 className="flex items-center gap-2 font-bold mb-3"><Target className="w-4 h-4 text-primary" /> What you'll learn</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {course.outcomes.map((o) => (
-                <li key={o} className="flex gap-2"><span className="text-primary">✓</span>{o}</li>
+                <li key={o} className="flex gap-2"><Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />{o}</li>
               ))}
             </ul>
           </div>

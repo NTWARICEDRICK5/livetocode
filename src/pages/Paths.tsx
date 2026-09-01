@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -29,7 +30,7 @@ const Paths = () => (
             className="card-glass rounded-2xl p-6 hover:-translate-y-1 hover:border-primary/40 transition-all group"
           >
             <div className="flex items-start gap-4 mb-4">
-              <span className="text-4xl">{p.icon}</span>
+              <span className="w-14 h-14 rounded-2xl bg-secondary/60 border border-border flex items-center justify-center"><TechIcon name={p.id} className="w-8 h-8" /></span>
               <div className="flex-1">
                 <h2 className="text-xl font-bold">{p.name}</h2>
                 <p className="text-sm text-muted-foreground">{p.tagline}</p>

@@ -6,7 +6,7 @@ import { courses } from "@/data/courses";
 import { getLessonExtras } from "@/data/lessonExtras";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Timer, Award, ShieldCheck, RotateCcw } from "lucide-react";
+import { Timer, Award, ShieldCheck, RotateCcw, PartyPopper, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
 interface Q {
@@ -138,7 +138,7 @@ const Certify = () => {
             CERTIFICATION
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            {course.icon} {course.fullName} <span className="text-gradient-primary">Exam</span>
+            {course.fullName} <span className="text-gradient-primary">Exam</span>
           </h1>
           <p className="text-muted-foreground">
             {Math.min(MAX_QUESTIONS, pool.length)} questions · {TEST_MINUTES} minutes · pass mark {PASS_PCT}%
@@ -217,7 +217,7 @@ const Certify = () => {
 
         {finished && (
           <div className="card-glass rounded-2xl p-8 text-center">
-            <div className="text-5xl mb-4">{passed ? "🎉" : "📚"}</div>
+            <div className="flex justify-center mb-4">{passed ? <PartyPopper className="w-12 h-12 text-primary" /> : <BookOpen className="w-12 h-12 text-muted-foreground" />}</div>
             <h2 className="text-2xl font-extrabold mb-1">
               {passed ? "You passed!" : "Not quite yet"}
             </h2>
