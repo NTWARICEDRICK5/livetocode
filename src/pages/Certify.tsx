@@ -138,7 +138,7 @@ const Certify = () => {
             CERTIFICATION
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            {course.icon} {course.fullName} <span className="text-gradient-primary">Exam</span>
+            {course.fullName} <span className="text-gradient-primary">Exam</span>
           </h1>
           <p className="text-muted-foreground">
             {Math.min(MAX_QUESTIONS, pool.length)} questions · {TEST_MINUTES} minutes · pass mark {PASS_PCT}%

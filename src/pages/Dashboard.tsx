@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -95,7 +96,7 @@ const Dashboard = () => {
           </h2>
           {continueLearning ? (
             <div className="card-glass rounded-2xl p-6 flex flex-col md:flex-row md:items-center gap-5">
-              <span className="text-4xl">{continueLearning.course.icon}</span>
+              <span className="w-14 h-14 rounded-2xl bg-secondary/60 border border-border flex items-center justify-center shrink-0"><TechIcon name={continueLearning.course.id} className="w-8 h-8" /></span>
               <div className="flex-1">
                 <div className="font-bold text-lg">{continueLearning.course.fullName}</div>
                 <div className="text-sm text-muted-foreground">

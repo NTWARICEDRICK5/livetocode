@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { courses } from "@/data/courses";
@@ -150,7 +151,7 @@ const CoursePage = () => {
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold mb-3"
                 style={{ background: course.color }}
               >
-                {course.icon}
+                <TechIcon name={course.id} className="w-7 h-7" colored={false} />
               </div>
               <h2 className="font-bold text-lg text-foreground">{course.fullName}</h2>
               <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">

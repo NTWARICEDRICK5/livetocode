@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -16,7 +17,7 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => (
 
       <header className="mb-10">
         <div className="flex items-center gap-4 mb-4">
-          <span className="text-5xl" aria-hidden>{course.icon}</span>
+          <span className="w-16 h-16 rounded-2xl bg-secondary/60 border border-border flex items-center justify-center"><TechIcon name={course.id} className="w-9 h-9" /></span>
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight">{course.name}</h1>
             <p className="text-sm text-muted-foreground">{course.category}</p>

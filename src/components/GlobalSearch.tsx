@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, CornerDownLeft } from "lucide-react";
@@ -102,7 +103,7 @@ const GlobalSearch = ({ variant = "button" }: Props) => {
                 value={`${c.name} ${c.category} ${c.skills.join(" ")}`}
                 onSelect={() => go(`/course/${c.id}`)}
               >
-                <span className="mr-2">{c.icon}</span>
+                <TechIcon name={c.id} className="w-4 h-4 mr-2" />
                 <span className="flex-1">{c.name}</span>
                 <span className="text-xs text-muted-foreground">{c.category}</span>
               </CommandItem>
@@ -112,7 +113,7 @@ const GlobalSearch = ({ variant = "button" }: Props) => {
           <CommandGroup heading="Learning paths">
             {paths.map((p) => (
               <CommandItem key={p.id} value={`path ${p.name}`} onSelect={() => go(`/paths/${p.id}`)}>
-                <span className="mr-2">{p.icon}</span>
+                <TechIcon name={p.id} className="w-4 h-4 mr-2" />
                 {p.name}
               </CommandItem>
             ))}

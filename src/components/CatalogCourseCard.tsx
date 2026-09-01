@@ -1,3 +1,4 @@
+import TechIcon from "@/components/TechIcon";
 import { Link } from "react-router-dom";
 import { Clock, Layers, ArrowRight, Sparkles } from "lucide-react";
 import type { CatalogCourse } from "@/data/catalog";
@@ -21,8 +22,8 @@ const CatalogCourseCard = ({ course, progress = 0, reason }: Props) => (
     className="group relative flex flex-col card-glass rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40"
   >
     <div className="flex items-start gap-3 mb-3">
-      <span className="text-3xl leading-none" aria-hidden>
-        {course.icon}
+      <span className="w-11 h-11 rounded-xl bg-secondary/60 border border-border flex items-center justify-center shrink-0">
+        <TechIcon name={course.id} className="w-6 h-6" />
       </span>
       <div className="min-w-0 flex-1">
         <h3 className="font-bold text-foreground truncate">{course.name}</h3>
