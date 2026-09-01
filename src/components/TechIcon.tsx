@@ -72,7 +72,7 @@ const MAP: Record<string, IconDef> = {
   pandas: { Icon: SiPandas, color: "#E0E0E0" },
   "machine-learning": { Icon: SiScikitlearn, color: "#F7931E" },
   "deep-learning": { Icon: SiPytorch, color: "#EE4C2C" },
-  "generative-ai": { Icon:  color: "#10A37F" },
+  "generative-ai": { Icon: Sparkles, color: "#10A37F" },
   llms: { Icon: BookOpen, color: "#C084FC" },
   cybersecurity: { Icon: Shield, color: "#F87171" },
   "ethical-hacking": { Icon: Search, color: "#FB923C" },
