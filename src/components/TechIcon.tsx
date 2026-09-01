@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, CSSProperties } from "react";
 import {
   SiPython, SiC, SiCplusplus, SiHtml5, SiCss3, SiJavascript, SiTypescript,
   SiOpenjdk, SiDotnet, SiGo, SiRust, SiPhp, SiRuby, SiKotlin, SiSwift,
@@ -14,7 +14,7 @@ import {
   Compass, Code2, Terminal, Layers, Cpu, Bug, Globe, Rocket, ShieldCheck,
 } from "lucide-react";
 
-type IconDef = { Icon: ComponentType<{ className?: string }>; color: string };
+type IconDef = { Icon: ComponentType<{ className?: string; style?: CSSProperties }>; color: string };
 
 const MAP: Record<string, IconDef> = {
   python: { Icon: SiPython, color: "#3776AB" },
