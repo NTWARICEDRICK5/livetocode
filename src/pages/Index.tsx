@@ -7,7 +7,7 @@ import CourseCard from "@/components/CourseCard";
 import RelatedCourseCard from "@/components/RelatedCourseCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass } from "lucide-react";
+import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass } , Target from "lucide-react";
 
 const stats = [
   { label: "Programming Languages", value: "6", icon: Code2 },
@@ -79,7 +79,7 @@ const Index = () => {
               }}
               className="px-8 py-4 bg-gradient-primary text-primary-foreground rounded-xl font-bold text-lg hover:opacity-90 transition-all glow-cyan hover:scale-105"
             >
-              🚀 Start Learning Free
+              Start Learning Free
             </Link>
             <Link
               to="/course/python"
@@ -253,7 +253,7 @@ const Index = () => {
       {/* CTA Footer */}
       <section className="py-24 container mx-auto px-4 text-center">
         <div className="max-w-2xl mx-auto card-glass rounded-3xl p-12">
-          <div className="text-5xl mb-6">🎯</div>
+          <Target className="w-12 h-12 mx-auto mb-6 text-primary" />
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
             Ready to <span className="text-gradient-primary">Start Coding?</span>
           </h2>
@@ -264,7 +264,7 @@ const Index = () => {
             to="/course/python"
             className="inline-block px-8 py-4 bg-gradient-primary text-primary-foreground rounded-xl font-bold text-lg hover:opacity-90 transition-all glow-cyan hover:scale-105"
           >
-            Start with Python — It's the Easiest! 🐍
+            Start with Python — It's the Easiest!
           </Link>
         </div>
       </section>

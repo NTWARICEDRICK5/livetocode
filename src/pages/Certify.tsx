@@ -217,7 +217,7 @@ const Certify = () => {
 
         {finished && (
           <div className="card-glass rounded-2xl p-8 text-center">
-            <div className="text-5xl mb-4">{passed ? "🎉" : "📚"}</div>
+            <div className="flex justify-center mb-4">{passed ? <PartyPopper className="w-12 h-12 text-primary" /> : <BookOpen className="w-12 h-12 text-muted-foreground" />}</div>
             <h2 className="text-2xl font-extrabold mb-1">
               {passed ? "You passed!" : "Not quite yet"}
             </h2>

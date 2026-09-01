@@ -50,7 +50,7 @@ const CoursePage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Navbar />
         <div className="text-center mt-20">
-          <div className="text-6xl mb-4">😕</div>
+          <SearchX className="w-14 h-14 mx-auto mb-4 text-muted-foreground" />
           <h1 className="text-3xl font-bold mb-4">Course Not Found</h1>
           <Link to="/courses" className="text-primary hover:underline">← Browse all courses</Link>
         </div>
@@ -199,7 +199,7 @@ const CoursePage = () => {
                       ? "bg-primary/20 text-primary"
                       : "bg-secondary text-muted-foreground"
                   }`}>
-                    {completedLessons.has(idx) ? "✓" : idx + 1}
+                    {completedLessons.has(idx) ? <Check className="w-3.5 h-3.5" /> : idx + 1}
                   </div>
                   <span className="line-clamp-2">{l.title}</span>
                 </button>
@@ -265,7 +265,7 @@ const CoursePage = () => {
                 disabled={activeLesson === course.lessons.length - 1}
                 className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                {activeLesson === course.lessons.length - 1 ? "Finished! 🎉" : "Next Lesson"}
+                {activeLesson === course.lessons.length - 1 ? "Finished!" : "Next Lesson"}
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -289,7 +289,7 @@ const CoursePage = () => {
                 <div className="grid grid-cols-2 gap-2">
                   {course.whyLearn.map((reason) => (
                     <div key={reason} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="text-primary">✓</span>
+                      <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                       {reason}
                     </div>
                   ))}

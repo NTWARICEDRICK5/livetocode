@@ -61,7 +61,7 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => (
             <h3 className="flex items-center gap-2 font-bold mb-3"><Target className="w-4 h-4 text-primary" /> What you'll learn</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               {course.outcomes.map((o) => (
-                <li key={o} className="flex gap-2"><span className="text-primary">✓</span>{o}</li>
+                <li key={o} className="flex gap-2"><Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />{o}</li>
               ))}
             </ul>
           </div>
