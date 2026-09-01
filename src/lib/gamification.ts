@@ -96,18 +96,18 @@ export const ACHIEVEMENTS: {
   icon: string;
   test: (s: AchievementInput) => boolean;
 }[] = [
-  { code: "first-lesson", title: "First Lesson", description: "Complete your very first lesson", icon: "🎯", test: (s) => s.lessons >= 1 },
-  { code: "first-quiz", title: "First Quiz", description: "Pass your first quiz", icon: "🧠", test: (s) => s.quizzes >= 1 },
-  { code: "first-project", title: "First Project", description: "Finish your first project", icon: "🛠️", test: (s) => s.projects >= 1 },
-  { code: "first-certificate", title: "First Certificate", description: "Earn your first certificate", icon: "📜", test: (s) => s.certificates >= 1 },
-  { code: "streak-7", title: "7-Day Streak", description: "Learn 7 days in a row", icon: "🔥", test: (s) => s.streak >= 7 },
-  { code: "streak-30", title: "30-Day Streak", description: "Learn 30 days in a row", icon: "🌟", test: (s) => s.streak >= 30 },
-  { code: "xp-100", title: "100 XP", description: "Earn your first 100 XP", icon: "⚡", test: (s) => s.xp >= 100 },
-  { code: "xp-500", title: "500 XP", description: "Earn 500 XP", icon: "💫", test: (s) => s.xp >= 500 },
-  { code: "xp-1000", title: "1000 XP", description: "Earn 1000 XP", icon: "🏆", test: (s) => s.xp >= 1000 },
-  { code: "ten-lessons", title: "Getting Serious", description: "Complete 10 lessons", icon: "📚", test: (s) => s.lessons >= 10 },
-  { code: "note-taker", title: "Note Taker", description: "Write your first note", icon: "📝", test: (s) => s.notes >= 1 },
-  { code: "explorer", title: "Explorer", description: "Start learning in 3 different courses", icon: "🧭", test: (s) => s.coursesTouched >= 3 },
+  { code: "first-lesson", title: "First Lesson", description: "Complete your very first lesson", icon: "target", test: (s) => s.lessons >= 1 },
+  { code: "first-quiz", title: "First Quiz", description: "Pass your first quiz", icon: "brain", test: (s) => s.quizzes >= 1 },
+  { code: "first-project", title: "First Project", description: "Finish your first project", icon: "wrench", test: (s) => s.projects >= 1 },
+  { code: "first-certificate", title: "First Certificate", description: "Earn your first certificate", icon: "scroll", test: (s) => s.certificates >= 1 },
+  { code: "streak-7", title: "7-Day Streak", description: "Learn 7 days in a row", icon: "flame", test: (s) => s.streak >= 7 },
+  { code: "streak-30", title: "30-Day Streak", description: "Learn 30 days in a row", icon: "star", test: (s) => s.streak >= 30 },
+  { code: "xp-100", title: "100 XP", description: "Earn your first 100 XP", icon: "zap", test: (s) => s.xp >= 100 },
+  { code: "xp-500", title: "500 XP", description: "Earn 500 XP", icon: "sparkles", test: (s) => s.xp >= 500 },
+  { code: "xp-1000", title: "1000 XP", description: "Earn 1000 XP", icon: "trophy", test: (s) => s.xp >= 1000 },
+  { code: "ten-lessons", title: "Getting Serious", description: "Complete 10 lessons", icon: "book", test: (s) => s.lessons >= 10 },
+  { code: "note-taker", title: "Note Taker", description: "Write your first note", icon: "note", test: (s) => s.notes >= 1 },
+  { code: "explorer", title: "Explorer", description: "Start learning in 3 different courses", icon: "compass", test: (s) => s.coursesTouched >= 3 },
 ];
 
 export interface AchievementInput {
