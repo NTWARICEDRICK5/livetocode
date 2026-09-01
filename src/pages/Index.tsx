@@ -7,7 +7,7 @@ import CourseCard from "@/components/CourseCard";
 import RelatedCourseCard from "@/components/RelatedCourseCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass } , Target from "lucide-react";
+import { ArrowDown, Code2, BookOpen, Zap, Star, Play, Compass, Target } from "lucide-react";
 
 const stats = [
   { label: "Programming Languages", value: "6", icon: Code2 },

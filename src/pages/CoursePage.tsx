@@ -9,7 +9,7 @@ import RecommendedForYou from "@/components/RecommendedForYou";
 import CourseOutline from "@/components/CourseOutline";
 import { getCatalogCourse } from "@/data/catalog";
 
-import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Check, SearchX } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { pullProgress } from "@/lib/progressSync";
 import { supabase } from "@/integrations/supabase/client";

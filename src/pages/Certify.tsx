@@ -6,7 +6,7 @@ import { courses } from "@/data/courses";
 import { getLessonExtras } from "@/data/lessonExtras";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Timer, Award, ShieldCheck, RotateCcw } from "lucide-react";
+import { Timer, Award, ShieldCheck, RotateCcw, PartyPopper, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
 interface Q {

@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import RecommendedForYou from "@/components/RecommendedForYou";
 import type { CatalogCourse } from "@/data/catalog";
 import { lessonCount } from "@/data/catalog";
-import { Clock, Layers, Target, ListChecks, Terminal, ArrowLeft } from "lucide-react";
+import { Clock, Layers, Target, ListChecks, Terminal, ArrowLeft, Check } from "lucide-react";
 
 const CourseOutline = ({ course }: { course: CatalogCourse }) => (
   <div className="min-h-screen bg-background">
