@@ -15,7 +15,7 @@ const RelatedCourseCard = ({ course }: { course: RelatedCourse }) => {
           className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform"
           style={{ background: course.color }}
         >
-          <TechIcon name={course.id} className="w-6 h-6" colored={false} />
+          <TechIcon name={course.name} className="w-6 h-6" colored={false} />
         </div>
         <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-secondary/60 text-muted-foreground font-semibold">
           {course.category}
