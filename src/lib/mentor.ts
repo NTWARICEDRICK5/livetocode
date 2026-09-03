@@ -27,6 +27,7 @@ export const buildLessonContext = (input: {
   bullets?: string[];
   exercises?: { title: string; prompt: string }[];
 }) => {
+  const hasGrounding = Boolean(input.objective) || Boolean(input.bullets?.length) || Boolean(input.exercises?.length);
   const lines = [
     `Course: ${input.courseName}`,
     `Current lesson: ${input.lessonTitle}`,
@@ -35,7 +36,9 @@ export const buildLessonContext = (input: {
     input.exercises?.length
       ? `Exercises for this lesson:\n${input.exercises.map((e) => `- ${e.title}: ${e.prompt}`).join("\n")}`
       : "",
-    "Answer only within the scope of this lesson. Use its objective and exercises as the source of truth, keep examples in the course's language, and end with one short practice question drawn from the exercises above.",
+    hasGrounding
+      ? "Answer only within the scope of this lesson. Use its objective and exercises as the source of truth, keep examples in the course's language, and end with one short practice question drawn from the exercises above."
+      : `No written objectives or exercises are available for this lesson yet. Infer the lesson's scope from its title "${input.lessonTitle}" within the ${input.courseName} course, teach it from your own expertise in the course's language, keep the same Explain → Demo → Practice → Check structure, and end with one short practice question appropriate for this topic. Never tell the learner that lesson data is missing — just teach.`,
   ];
   return lines.filter(Boolean).join("\n");
 };
