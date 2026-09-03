@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Bot, Send, X, Loader2, Sparkles } from "lucide-react";
+import { Bot, Send, X, Loader2, Sparkles, BookOpen } from "lucide-react";
+import type { MentorRequest } from "@/lib/mentor";
 
 interface Msg {
   role: "user" | "assistant";
   content: string;
 }
 
-const SUGGESTIONS = [
+const DEFAULT_SUGGESTIONS = [
   "Explain pointers in C simply",
   "Why is my Python loop not stopping?",
   "What should I learn after HTML and CSS?",
@@ -52,11 +53,29 @@ const TutorChat = () => {
         "Hi! I'm your CodeLearn AI Mentor. Ask me anything about Python, C, C++, HTML, CSS, JavaScript or TypeScript — or paste code that isn't working and I'll debug it with you.",
     },
   ]);
+  const [lessonContext, setLessonContext] = useState<string | null>(null);
+  const [topic, setTopic] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<string[]>(DEFAULT_SUGGESTIONS);
   const endRef = useRef<HTMLDivElement>(null);
   const { pathname, search } = useLocation();
 
+  // keep the latest context available to `send` without re-registering listeners
+  const contextRef = useRef<string | null>(null);
+  contextRef.current = lessonContext;
+  const sendRef = useRef<(t: string) => void>(() => {});
+
   useEffect(() => {
-    const openHandler = () => setOpen(true);
+    const openHandler = (e: Event) => {
+      const detail = (e as CustomEvent<MentorRequest>).detail;
+      setOpen(true);
+      if (detail?.context !== undefined) {
+        setLessonContext(detail.context ?? null);
+        contextRef.current = detail.context ?? null;
+      }
+      if (detail?.topic !== undefined) setTopic(detail.topic ?? null);
+      setSuggestions(detail?.suggestions?.length ? detail.suggestions : DEFAULT_SUGGESTIONS);
+      if (detail?.prompt) sendRef.current(detail.prompt);
+    };
     window.addEventListener("open-ai-mentor", openHandler);
     return () => window.removeEventListener("open-ai-mentor", openHandler);
   }, []);
@@ -86,7 +105,12 @@ const TutorChat = () => {
         },
         body: JSON.stringify({
           messages: next,
-          context: `The learner is currently on the CodeLearn page "${pathname}${search}".`,
+          context: [
+            `The learner is currently on the CodeLearn page "${pathname}${search}".`,
+            contextRef.current ?? "",
+          ]
+            .filter(Boolean)
+            .join("\n\n"),
         }),
       });
 
@@ -130,6 +154,8 @@ const TutorChat = () => {
     }
   };
 
+  sendRef.current = send;
+
   if (!open) {
     return (
       <button
@@ -151,7 +177,9 @@ const TutorChat = () => {
         </div>
         <div className="flex-1">
           <div className="text-sm font-bold">AI Mentor</div>
-          <div className="text-[11px] text-muted-foreground">Explain · Demo · Practice · Check</div>
+          <div className="text-[11px] text-muted-foreground truncate">
+            {topic ? `Lesson: ${topic}` : "Explain · Demo · Practice · Check"}
+          </div>
         </div>
         <button
           onClick={() => setOpen(false)}
@@ -184,10 +212,16 @@ const TutorChat = () => {
 
         {messages.length === 1 && (
           <div className="space-y-2 pt-2">
+            {lessonContext && (
+              <div className="flex items-start gap-1.5 text-[11px] text-primary/90 rounded-lg border border-primary/25 bg-primary/10 px-3 py-2">
+                <BookOpen className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>Answers are grounded in this lesson's objectives and exercises.</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Sparkles className="w-3.5 h-3.5 text-primary" /> Try asking
             </div>
-            {SUGGESTIONS.map((s) => (
+            {suggestions.map((s) => (
               <button
                 key={s}
                 onClick={() => send(s)}
