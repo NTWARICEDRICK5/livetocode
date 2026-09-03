@@ -9,7 +9,9 @@ import RecommendedForYou from "@/components/RecommendedForYou";
 import CourseOutline from "@/components/CourseOutline";
 import { getCatalogCourse } from "@/data/catalog";
 
-import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Check, SearchX } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Clock, ArrowLeft, CheckCircle2, Check, SearchX, Sparkles } from "lucide-react";
+import { askMentor, buildLessonContext, lessonSuggestions } from "@/lib/mentor";
+import { lessonExtras } from "@/data/lessonExtras";
 import { useAuth } from "@/hooks/useAuth";
 import { pullProgress } from "@/lib/progressSync";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +62,36 @@ const CoursePage = () => {
 
 
   const lesson = course.lessons[activeLesson];
+
+  const extras = lessonExtras[`${course.id}:${lesson.id}`];
+  const lessonExerciseList = extras
+    ? [
+        { title: "Practice", prompt: extras.practice.instructions },
+        { title: extras.apply.title, prompt: extras.apply.description },
+      ]
+    : [];
+  const mentorContext = buildLessonContext({
+    courseName: course.name,
+    lessonTitle: lesson.title,
+    objective: lesson.description,
+    bullets: [
+      ...(extras?.quiz.map((q) => q.q) ?? []),
+      ...(lesson.code ? ["The lesson demo code is:\n" + lesson.code] : []),
+    ],
+    exercises: lessonExerciseList,
+  });
+  const openMentor = (prompt: string) =>
+    askMentor({
+      prompt,
+      topic: lesson.title,
+      context: mentorContext,
+      suggestions: lessonSuggestions(lesson.title, lessonExerciseList),
+    });
+  const mentorChips = [
+    { label: "Explain this lesson", prompt: `Explain "${lesson.title}" in ${course.name} using this lesson's objective, with one short example.` },
+    { label: "Hint for the practice task", prompt: `Give me a hint (not the solution) for this lesson's practice task.` },
+    { label: "Quiz me", prompt: `Ask me 3 questions based on this lesson's objectives, one at a time, and check my answers.` },
+  ];
 
   const markComplete = () => {
     const updated = new Set(completedLessons);
@@ -222,6 +254,19 @@ const CoursePage = () => {
                 {lesson.title}
               </h1>
               <p className="text-muted-foreground text-lg">{lesson.description}</p>
+
+              {/* Lesson-scoped AI Mentor */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {mentorChips.map((chip) => (
+                  <button
+                    key={chip.label}
+                    onClick={() => openMentor(chip.prompt)}
+                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 transition-colors"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" /> {chip.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* 5-stage learning cycle: Explain → Demonstrate → Practice → Test → Apply */}
