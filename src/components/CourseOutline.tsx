@@ -33,8 +33,7 @@ const TABS: { id: Tab; label: string; icon: typeof BookOpen }[] = [
   { id: "resources", label: "Resources", icon: Link2 },
 ];
 
-const askMentor = (prompt: string) =>
-  window.dispatchEvent(new CustomEvent("open-ai-mentor", { detail: { prompt } }));
+import { askMentor, buildLessonContext, lessonSuggestions } from "@/lib/mentor";
 
 const CourseOutline = ({ course }: { course: CatalogCourse }) => {
   const [tab, setTab] = useState<Tab>("curriculum");
@@ -129,7 +128,20 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => {
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                   <button
-                                    onClick={() => askMentor(`Teach me "${l}" in ${course.name}. Explain it, show a small code example, then give me one practice task.`)}
+                                    onClick={() =>
+                                      askMentor({
+                                        prompt: `Teach me "${l}" in ${course.name}. Explain it, show a small code example, then give me one practice task.`,
+                                        topic: l,
+                                        context: buildLessonContext({
+                                          courseName: course.name,
+                                          lessonTitle: l,
+                                          objective: note ?? `Learn ${l.toLowerCase()} in the context of ${course.name}.`,
+                                          bullets: course.outcomes,
+                                          exercises: detail?.exercises,
+                                        }),
+                                        suggestions: lessonSuggestions(l, detail?.exercises),
+                                      })
+                                    }
                                     className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 transition-colors"
                                   >
                                     <Sparkles className="w-3.5 h-3.5" /> Learn with AI Mentor
@@ -173,7 +185,25 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => {
                         <Terminal className="w-3.5 h-3.5" /> Solve in Playground
                       </Link>
                       <button
-                        onClick={() => askMentor(`I'm working on this ${course.name} exercise: ${ex.title}. ${ex.prompt} Guide me step by step without giving the full solution first.`)}
+                        onClick={() =>
+                          askMentor({
+                            prompt: `I'm working on this ${course.name} exercise: ${ex.title}. ${ex.prompt} Guide me step by step without giving the full solution first.`,
+                            topic: ex.title,
+                            context: buildLessonContext({
+                              courseName: course.name,
+                              lessonTitle: ex.title,
+                              objective: ex.prompt,
+                              bullets: [ex.hint],
+                              exercises: detail?.exercises,
+                            }),
+                            suggestions: [
+                              `Give me the first step for "${ex.title}"`,
+                              `What concept does "${ex.title}" test?`,
+                              `Check my approach to "${ex.title}"`,
+                              `Show a worked example similar to "${ex.title}"`,
+                            ],
+                          })
+                        }
                         className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-secondary/60 border border-border text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <Sparkles className="w-3.5 h-3.5" /> Get a hint from AI Mentor
@@ -271,7 +301,20 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => {
                 Open Playground
               </Link>
               <button
-                onClick={() => askMentor(`I want to start learning ${course.name}. Give me a study plan based on this curriculum: ${course.modules.map((m) => m.title).join(", ")}.`)}
+                onClick={() =>
+                  askMentor({
+                    prompt: `I want to start learning ${course.name}. Give me a study plan based on this curriculum: ${course.modules.map((m) => m.title).join(", ")}.`,
+                    topic: course.name,
+                    context: buildLessonContext({
+                      courseName: course.name,
+                      lessonTitle: `${course.name} curriculum`,
+                      objective: detail?.intro ?? course.description,
+                      bullets: course.modules.map((m) => `${m.title}: ${m.lessons.join(", ")}`),
+                      exercises: detail?.exercises,
+                    }),
+                    suggestions: lessonSuggestions(course.name, detail?.exercises),
+                  })
+                }
                 className="w-full px-4 py-2.5 rounded-xl border border-primary/30 text-primary text-sm font-semibold hover:bg-primary/10 transition-colors"
               >
                 Ask AI Mentor for a plan
