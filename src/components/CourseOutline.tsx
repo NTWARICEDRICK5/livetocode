@@ -22,12 +22,19 @@ import {
   Sparkles,
   ExternalLink,
   Lightbulb,
+  FlaskConical,
+  GraduationCap,
 } from "lucide-react";
+import Quiz from "@/components/Quiz";
+import CourseLabs from "@/components/CourseLabs";
+import { getCourseAssessment } from "@/data/courseAssessments";
 
-type Tab = "curriculum" | "exercises" | "projects" | "resources";
+type Tab = "curriculum" | "labs" | "quiz" | "exercises" | "projects" | "resources";
 
 const TABS: { id: Tab; label: string; icon: typeof BookOpen }[] = [
   { id: "curriculum", label: "Lessons", icon: BookOpen },
+  { id: "labs", label: "Labs", icon: FlaskConical },
+  { id: "quiz", label: "Quiz", icon: GraduationCap },
   { id: "exercises", label: "Exercises", icon: Dumbbell },
   { id: "projects", label: "Projects", icon: Hammer },
   { id: "resources", label: "Resources", icon: Link2 },
@@ -39,6 +46,7 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => {
   const [tab, setTab] = useState<Tab>("curriculum");
   const [openLesson, setOpenLesson] = useState<string | null>(null);
   const detail = getCourseDetail(course.id);
+  const assessment = getCourseAssessment(course.id);
 
   return (
     <div className="min-h-screen bg-background">
@@ -161,6 +169,30 @@ const CourseOutline = ({ course }: { course: CatalogCourse }) => {
                     </ul>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {tab === "labs" && (
+              <CourseLabs courseName={course.name} labs={assessment?.labs ?? []} />
+            )}
+
+            {tab === "quiz" && (
+              <div className="space-y-4">
+                {assessment?.quiz.length ? (
+                  <>
+                    <div className="card-glass rounded-2xl p-5">
+                      <h3 className="font-bold mb-1 flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4 text-primary" /> {course.name} knowledge check
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {assessment.quiz.length} questions · score 70% or higher to pass.
+                      </p>
+                    </div>
+                    <Quiz questions={assessment.quiz} />
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">The quiz for this course is being finalised.</p>
+                )}
               </div>
             )}
 
